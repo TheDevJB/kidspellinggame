@@ -1,0 +1,48 @@
+/* Gradient background and nice font for the home page */
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: linear-gradient(135deg, #f8ffae 0%, #43c6ac 100%);
+  font-family: 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
+}
+
+.tabs {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.tabs a {
+  text-decoration: none;
+  color: #333;
+  font-size: 1.3rem;
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  transition: background 0.3s, color 0.3s;
+}
+
+.tabs a.active, .tabs a:hover {
+  background: #43c6ac;
+  color: #fff;
+}
+
+.content {
+  background: rgba(255,255,255,0.8);
+  padding: 2rem 3rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(67,198,172,0.15);
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+p {
+  font-size: 1.2rem;
+}
