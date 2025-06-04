@@ -1,0 +1,109 @@
+.game-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  color: #333;
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.score {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #43c6ac;
+  margin-bottom: 2rem;
+}
+
+.game-area {
+  margin-top: 2rem;
+}
+
+.hint {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: #fff3cd;
+  border-radius: 8px;
+  color: #856404;
+  font-size: 1.1rem;
+}
+
+.input-area {
+  margin: 2rem 0;
+}
+
+input {
+  padding: 1rem;
+  font-size: 1.3rem;
+  margin: 1rem;
+  border: 2px solid #43c6ac;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 400px;
+}
+
+.buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+button {
+  padding: 0.8rem 1.5rem;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.check-btn {
+  background-color: #43c6ac;
+  color: white;
+}
+
+.hint-btn {
+  background-color: #f8ffae;
+  color: #333;
+}
+
+.next-btn {
+  background-color: #333;
+  color: white;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.message {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1.2rem;
+}
+
+.message.success {
+  background-color: #d4edda;
+  color: #155724;
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

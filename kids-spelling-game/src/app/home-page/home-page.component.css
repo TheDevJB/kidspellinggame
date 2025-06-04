@@ -1,23 +1,11 @@
-/* Reset default body margin and set full height */
-:host {
-  display: block;
-  min-height: 100vh;
-  margin: 0;
-  padding: 0;
-}
-
-/* Gradient background and nice font for the home page */
 .container {
-  min-height: 100vh;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: linear-gradient(135deg, #f8ffae 0%, #43c6ac 100%);
-  background-attachment: fixed;
-  font-family: 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .tabs {
@@ -25,6 +13,8 @@
   gap: 2rem;
   margin-top: 2rem;
   margin-bottom: 2rem;
+  width: 100%;
+  justify-content: center;
 }
 
 .tabs a {
@@ -34,6 +24,7 @@
   padding: 0.5rem 1.5rem;
   border-radius: 20px;
   transition: background 0.3s, color 0.3s;
+  cursor: pointer;
 }
 
 .tabs a.active, .tabs a:hover {
@@ -42,12 +33,7 @@
 }
 
 .content {
-  background: rgba(255,255,255,0.8);
-  padding: 2rem 3rem;
-  border-radius: 20px;
-  box-shadow: 0 4px 16px rgba(67,198,172,0.15);
-  text-align: center;
-  margin: 0 1rem;
+  margin: 1.5rem 0;
 }
 
 h1 {
@@ -59,4 +45,46 @@ h1 {
 p {
   font-size: 1.2rem;
   color: #444;
+}
+
+.game-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 2rem 0;
+  width: 100%;
+  max-width: 400px;
+}
+
+button {
+  width: 100%;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 15px;
+  background: #43c6ac;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  font-family: inherit;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(67,198,172,0.2);
+}
+
+@media (max-width: 600px) {
+  .content {
+    padding: 1.5rem;
+    width: 95%;
+  }
+  
+  .game-buttons {
+    padding: 0 1rem;
+  }
+  
+  button {
+    padding: 0.8rem 1.5rem;
+  }
 }

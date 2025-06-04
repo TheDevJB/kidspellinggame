@@ -3,6 +3,7 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+  width: 100%;
   overflow-x: hidden;
 }
 
@@ -10,4 +11,76 @@ body {
   min-height: 100vh;
   margin: 0;
   padding: 0;
+  position: relative;
+  background: linear-gradient(135deg, #f8ffae 0%, #43c6ac 100%);
+  background-attachment: fixed;
+  font-family: 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
+}
+
+/* Global navigation styles */
+.tabs {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.tabs a {
+  text-decoration: none;
+  color: #333;
+  font-size: 1.3rem;
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.tabs a:hover {
+  background: #43c6ac;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.tabs a.active {
+  background: #43c6ac;
+  color: #fff;
+}
+
+/* Common container styles */
+.container, .game-container {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 800px;
+}
+
+/* Common button styles */
+button {
+  cursor: pointer;
+  padding: 0.8rem 1.5rem;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Common input styles */
+input {
+  padding: 0.8rem;
+  font-size: 1.1rem;
+  border: 2px solid #43c6ac;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(67, 198, 172, 0.3);
 }
