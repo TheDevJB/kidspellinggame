@@ -1,0 +1,17 @@
+<div class="word-family-grid">
+  <div *ngFor="let family of wordFamilies" 
+       [ngClass]="{'word-family-card': true, 'completed': family.completed, 'in-progress': family.inProgress && !family.completed}"
+       (click)="selectFamily(family)">
+    <span class="difficulty" [ngClass]="family.difficulty.toLowerCase()">
+      {{family.difficulty}}
+    </span>
+    <span class="status-badge" *ngIf="family.completed || family.inProgress">
+      {{family.completed ? 'Completed!' : 'In Progress'}}
+    </span>
+    <h3>{{family.name}}</h3>
+    <p>{{family.description}}</p>
+    <div class="progress-bar" *ngIf="family.inProgress && !family.completed">
+      <div class="progress-bar-fill" [style.width.%]="(family.wordsLearned / family.words.length) * 100"></div>
+    </div>
+  </div>
+</div> 

@@ -1,90 +1,278 @@
 .container {
-  max-width: 800px;
+  max-width: 1000px;
   margin: 2rem auto;
   padding: 2rem;
   text-align: center;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 15px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.tabs {
-  display: flex;
-  gap: 2rem;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-  width: 100%;
-  justify-content: center;
-}
-
-.tabs a {
-  text-decoration: none;
-  color: #333;
-  font-size: 1.3rem;
-  padding: 0.5rem 1.5rem;
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
   border-radius: 20px;
-  transition: background 0.3s, color 0.3s;
-  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.tabs a.active, .tabs a:hover {
-  background: #43c6ac;
-  color: #fff;
+/* Welcome Section */
+.welcome-section {
+  position: relative;
+  margin-bottom: 2rem;
+  overflow: hidden;
 }
 
-.content {
-  margin: 1.5rem 0;
+.stars {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  animation: twinkle 1.5s infinite ease-in-out;
+  font-size: 24px;
+  color: var(--primary-light);
+}
+
+.star:nth-child(1) { top: 20%; left: 20%; animation-delay: 0s; }
+.star:nth-child(2) { top: 30%; right: 25%; animation-delay: 0.3s; }
+.star:nth-child(3) { top: 15%; left: 50%; animation-delay: 0.6s; }
+
+@keyframes twinkle {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.7; }
 }
 
 h1 {
+  font-size: 3rem;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  animation: float 3s infinite ease-in-out;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+/* Mascot */
+.mascot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.character {
+  font-size: 4rem;
+  animation: bounce 2s infinite ease-in-out;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.speech-bubble {
+  position: relative;
+  background: var(--bg-glass);
+  padding: 1rem;
+  border-radius: 20px;
+  max-width: 300px;
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  backdrop-filter: blur(5px);
+}
+
+.speech-bubble:before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-right: 10px solid var(--bg-glass);
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+}
+
+/* Games Grid */
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.game-card {
+  background: var(--bg-glass);
+  border-radius: 15px;
+  padding: 2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.game-card:hover:not(.coming-soon) {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(139, 198, 236, 0.2);
+}
+
+.game-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.game-card h2 {
+  color: var(--text-primary);
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.game-card p {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+  text-align: left;
+}
+
+.features li {
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.play-button {
+  background: var(--button-gradient);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+}
+
+.play-button:hover:not(:disabled) {
+  background: var(--button-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 198, 236, 0.3);
+}
+
+.play-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.coming-soon {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Achievements Section */
+.achievements {
+  margin: 3rem 0;
+}
+
+.achievements h2 {
+  color: var(--text-primary);
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.achievement-cards {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.achievement {
+  background: var(--bg-glass);
+  padding: 1.5rem;
+  border-radius: 15px;
+  width: 200px;
+  backdrop-filter: blur(5px);
+  transition: transform 0.3s ease;
+}
+
+.achievement:hover {
+  transform: translateY(-5px);
+}
+
+.achievement-icon {
   font-size: 2.5rem;
   margin-bottom: 1rem;
-  color: #333;
 }
 
-p {
-  font-size: 1.2rem;
-  color: #444;
+.achievement p {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
 }
 
-.game-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  margin: 2rem 0;
-  width: 100%;
-  max-width: 400px;
-}
-
-button {
-  width: 100%;
-  padding: 1rem 2rem;
-  font-size: 1.2rem;
-  border: none;
+/* Motivation Section */
+.motivation {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: var(--bg-glass);
   border-radius: 15px;
-  background: #43c6ac;
-  color: white;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  font-family: inherit;
+  backdrop-filter: blur(5px);
 }
 
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(67,198,172,0.2);
+.motivation p {
+  color: var(--text-primary);
+  font-size: 1.4rem;
+  font-style: italic;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-@media (max-width: 600px) {
-  .content {
-    padding: 1.5rem;
-    width: 95%;
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    margin: 1rem;
+    padding: 1rem;
   }
-  
-  .game-buttons {
-    padding: 0 1rem;
+
+  h1 {
+    font-size: 2.5rem;
   }
-  
-  button {
-    padding: 0.8rem 1.5rem;
+
+  .achievement-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .achievement {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .mascot {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .speech-bubble:before {
+    display: none;
   }
 }

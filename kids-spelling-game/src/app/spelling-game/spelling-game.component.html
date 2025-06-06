@@ -1,28 +1,105 @@
 <!DOCTYPE html>
 <div class="game-container">
-  <h2>Spelling Game</h2>
+  <app-nav-tabs></app-nav-tabs>
   
-  <div class="score">Score: {{score}}</div>
-  
-  <div class="game-area" *ngif="currentWord">
-    <div class="hint" *ngif="showHint">
-      Hint: {{currentWord.hint}}
+  <!-- Back Button -->
+  <button class="back-button" (click)="goBackToFamilies()">
+    ← Back to Word Families
+  </button>
+
+  <!-- Family Selection (if no family selected) -->
+  <div *ngIf="!selectedFamily && !showingReview" class="family-selection">
+    <h2>Choose a Word Family</h2>
+    <div class="families-grid">
+      <div *ngFor="let family of wordFamilies" 
+           class="family-card" 
+           [class.completed]="family.completed"
+           (click)="selectFamily(family)">
+        <span class="difficulty">{{family.difficulty}}</span>
+        <h3>{{family.name}}</h3>
+        <p>{{family.description}}</p>
+        <div class="pattern">Pattern: {{family.pattern}}</div>
+        <div class="status" *ngIf="family.completed">✅ Completed!</div>
+        <div class="status" *ngIf="family.inProgress && !family.completed">
+          📚 In Progress ({{family.wordsLearned}}/{{family.words.length}})
+        </div>
+      </div>
     </div>
+  </div>
+
+  <!-- Game Area (when family is selected) -->
+  <div *ngIf="selectedFamily && !showingReview" class="game-area">
+    <h2>{{selectedFamily.name}} - Spelling Practice</h2>
     
+    <div class="score">Score: {{score}} | Words Learned: {{wordsLearned}}/{{selectedFamily.words.length}}</div>
+    
+    <div class="word-area">
+      <div class="current-word" 
+           [class.fade-out]="isWordFading"
+           *ngIf="isWordVisible && currentWord">
+        {{currentWord.word}}
+      </div>
+      
+      <button class="show-word-btn" 
+              (click)="showWordAgain()" 
+              [disabled]="isWordVisible">
+        Show Word Again
+      </button>
+    </div>
+
     <div class="input-area">
       <input type="text" 
-             [(ngmodel)]="userInput" 
+             [(ngModel)]="userInput" 
+             (keyup.enter)="checkSpelling()"
              placeholder="Type the word here..."
-             (keyup.enter)="checkAnswer()">
+             [disabled]="isWordVisible"
+             [class.success-input]="isSuccess"
+             [class.error-input]="isError">
       
       <div class="buttons">
-        <button (click)="checkAnswer()" class="check-btn">Check Answer</button>
-        <button (click)="showHintClicked()" class="hint-btn" [disabled]="showHint">Need a Hint?</button>
+        <button class="check-btn" 
+                (click)="checkSpelling()" 
+                [disabled]="isWordVisible || !userInput.trim()">
+          Check Spelling
+        </button>
+        <button class="next-btn" 
+                (click)="loadNewWord()" 
+                [disabled]="isWordVisible">
+          Next Word
+        </button>
       </div>
     </div>
 
-    <div class="message" [class.success]="message.includes('Correct')">
-      {{message}}
+    <div class="message" 
+         [class.success-message]="isSuccess" 
+         [class.error-message]="isError">
+      <div class="message-content">
+        {{message}}
+      </div>
+    </div>
+
+    <div class="progress">
+      Progress: {{wordsLearned}} / {{selectedFamily.words.length}} words learned
+    </div>
+  </div>
+
+  <!-- Review Section (after completing family) -->
+  <div *ngIf="showingReview" class="review-section">
+    <div class="review-content">
+      <h3>🎉 Congratulations! You completed the {{selectedFamily?.name}}!</h3>
+      <p>Here are sentences using the words you learned:</p>
+      
+      <div class="sentences">
+        <div *ngFor="let sentence of reviewSentences; let i = index" class="sentence-card">
+          <p>{{sentence}}</p>
+          <button class="practice-btn" (click)="practiceWord(i)">Practice This Word</button>
+        </div>
+      </div>
+      
+      <div class="review-buttons">
+        <button class="primary-btn" (click)="startNewFamily()">Choose New Family</button>
+        <button class="secondary-btn" (click)="restartFamily()">Practice Again</button>
+      </div>
     </div>
   </div>
 </div>
