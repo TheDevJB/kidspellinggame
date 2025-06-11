@@ -57,26 +57,40 @@ import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
 
     .tabs a {
       text-decoration: none;
-      color: #333;
+      color: var(--nav-text);
       font-size: 1.3rem;
-      padding: 0.5rem 1.5rem;
-      border-radius: 20px;
-      transition: background 0.3s, color 0.3s;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      transition: all 0.3s ease;
       cursor: pointer;
       position: relative;
+      background: var(--nav-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-weight: 500;
     }
 
-    .tabs a.active, .tabs a:not(.disabled-tab):hover {
-      background: #43c6ac;
-      color: #fff;
+    .tabs a.active {
+      background: var(--nav-active);
+      color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .tabs a:not(.disabled-tab):hover {
+      background: var(--nav-hover);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
     .disabled-tab {
-      opacity: 0.7;
+      opacity: 0.6;
       cursor: not-allowed !important;
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      background: rgba(128, 128, 128, 0.2) !important;
+      color: var(--text-light) !important;
     }
 
     .stop-icon {
@@ -84,7 +98,7 @@ import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
       opacity: 0;
       transition: opacity 0.3s ease;
       position: absolute;
-      right: -1rem;
+      right: -1.5rem;
       top: 50%;
       transform: translateY(-50%);
     }
@@ -95,7 +109,8 @@ import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
 
     .disabled-tab:hover {
       background: rgba(255, 0, 0, 0.1) !important;
-      color: #333 !important;
+      color: var(--error-color) !important;
+      transform: none !important;
     }
   `]
 })
