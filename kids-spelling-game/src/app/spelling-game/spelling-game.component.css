@@ -62,7 +62,6 @@ h2 {
   border: none;
 }
 
-/* Light theme word styling */
 :root[data-theme="light"] .current-word {
   background: var(--primary-gradient);
   -webkit-background-clip: text;
@@ -71,7 +70,6 @@ h2 {
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Dark theme word styling - much more visible */
 :root[data-theme="dark"] .current-word {
   color: #ffffff;
   background: transparent;
@@ -87,7 +85,6 @@ h2 {
   transform: scale(0.9);
 }
 
-/* Enhanced hover effect for dark theme */
 :root[data-theme="dark"] .current-word:hover {
   text-shadow: 
     0 0 30px rgba(102, 126, 234, 1),
@@ -97,7 +94,6 @@ h2 {
   transform: translateY(-2px) scale(1.05);
 }
 
-/* Subtle animation for dark theme words */
 :root[data-theme="dark"] .current-word {
   animation: subtleGlow 3s ease-in-out infinite alternate;
 }
@@ -165,7 +161,6 @@ input {
   font-weight: 500;
 }
 
-/* Enhanced input styling for dark theme */
 :root[data-theme="dark"] input {
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(102, 126, 234, 0.3);
@@ -184,7 +179,6 @@ input:focus {
   transform: scale(1.02);
 }
 
-/* Enhanced focus state for dark theme */
 :root[data-theme="dark"] input:focus {
   border-color: rgba(102, 126, 234, 0.8);
   box-shadow: 
@@ -206,10 +200,10 @@ input.error-input {
 
 .buttons {
   display: flex;
-  gap: 1.5rem;
+  gap: 1rem;
   justify-content: center;
-  margin-top: 1.5rem;
   flex-wrap: wrap;
+  margin: 2rem 0;
 }
 
 .check-btn, .next-btn {
@@ -218,12 +212,11 @@ input.error-input {
   border: none;
   padding: 1rem 2rem;
   border-radius: 25px;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-weight: 500;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  min-width: 150px;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .check-btn:hover:not([disabled]), .next-btn:hover:not([disabled]) {
@@ -239,181 +232,167 @@ input.error-input {
 }
 
 .message {
-  min-height: 60px;
   margin: 2rem 0;
-  font-size: 1.4rem;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 1.5rem;
+  border-radius: 20px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
 .message.success-message {
+  background: linear-gradient(135deg, rgba(72, 187, 120, 0.2), rgba(72, 187, 120, 0.1));
   color: var(--success-color);
-  background: rgba(72, 187, 120, 0.1);
-  padding: 1rem 2rem;
-  border-radius: 25px;
   border: 2px solid var(--success-color);
-  animation: pulse 0.6s ease-in-out;
+  box-shadow: 0 8px 25px rgba(72, 187, 120, 0.2);
 }
 
 .message.error-message {
+  background: linear-gradient(135deg, rgba(245, 101, 101, 0.2), rgba(245, 101, 101, 0.1));
   color: var(--error-color);
-  background: rgba(245, 101, 101, 0.1);
-  padding: 1rem 2rem;
-  border-radius: 25px;
   border: 2px solid var(--error-color);
-  animation: shake 0.5s ease-in-out;
+  box-shadow: 0 8px 25px rgba(245, 101, 101, 0.2);
 }
 
 .message-content {
-  position: relative;
-  display: inline-block;
-  font-weight: 600;
+  font-size: 1.2rem;
+  margin: 0;
 }
 
-/* Word Family Selection */
 .family-selection {
-  padding: 2rem 0;
+  margin-bottom: 2rem;
 }
 
 .families-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin: 2rem 0;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .family-card {
   background: var(--bg-card);
-  border-radius: 20px;
-  padding: 2rem;
+  border-radius: 15px;
+  padding: 1.5rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(15px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 2px solid transparent;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .family-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
   border-color: var(--primary-light);
 }
 
 .family-card h3 {
   color: var(--text-primary);
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.3rem;
   font-weight: 600;
 }
 
 .family-card p {
   color: var(--text-secondary);
-  margin-bottom: 1.5rem;
-  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
 }
 
 .family-card .difficulty {
-  color: var(--text-light);
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
-  background: var(--bg-glass);
+  display: inline-block;
   padding: 0.3rem 0.8rem;
   border-radius: 15px;
-  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
 .family-card .pattern {
-  color: var(--accent-color);
-  font-weight: bold;
-  margin-bottom: 1rem;
+  font-family: monospace;
   font-size: 1.1rem;
+  color: var(--primary-light);
+  font-weight: bold;
 }
 
 .family-card .status {
-  font-size: 1.1rem;
-  color: var(--text-primary);
   margin-top: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
 }
 
 .family-card.completed {
-  background: linear-gradient(135deg, var(--success-color), rgba(72, 187, 120, 0.8));
-  color: white;
+  border-color: var(--success-color);
 }
 
 .family-card.completed h3,
-.family-card.completed p,
-.family-card.completed .pattern,
 .family-card.completed .status {
-  color: white;
+  color: var(--success-color);
 }
 
-/* Progress Bar */
 .progress {
-  background: var(--bg-card);
-  border-radius: 25px;
-  padding: 1rem 2rem;
-  margin: 1.5rem auto;
-  max-width: 400px;
-  color: var(--text-primary);
-  font-size: 1.2rem;
-  font-weight: 600;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin: 1rem 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  height: 8px;
+  overflow: hidden;
 }
 
-/* Review Section */
+.progress-bar {
+  height: 100%;
+  background: var(--primary-gradient);
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
 .review-section {
-  padding: 2rem;
+  margin-top: 3rem;
 }
 
 .review-content {
-  max-width: 800px;
-  margin: 0 auto;
+  text-align: left;
 }
 
 .review-content h3 {
   color: var(--text-primary);
-  margin-bottom: 2rem;
-  font-size: 2rem;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
   font-weight: 600;
 }
 
 .sentences {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
   margin-bottom: 2rem;
 }
 
 .sentence-card {
-  background: var(--bg-card);
-  border-radius: 20px;
-  padding: 2rem;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(15px);
+  background: var(--bg-glass);
+  padding: 1.5rem;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
 .sentence-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 .sentence-card p {
   color: var(--text-primary);
-  font-size: 1.3rem;
-  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  margin: 0;
   line-height: 1.6;
   font-weight: 500;
 }
 
 .practice-btn {
-  background: var(--button-gradient);
+  background: var(--secondary-gradient);
   color: white;
   border: none;
   padding: 0.8rem 1.5rem;
@@ -421,45 +400,42 @@ input.error-input {
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-weight: 500;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  margin-top: 1rem;
+  font-weight: 600;
 }
 
 .practice-btn:hover {
-  background: var(--button-hover);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .review-buttons {
   display: flex;
-  gap: 1.5rem;
+  gap: 1rem;
   justify-content: center;
-  margin-top: 2rem;
   flex-wrap: wrap;
+  margin-top: 2rem;
 }
 
 .primary-btn, .secondary-btn {
   padding: 1rem 2rem;
   border-radius: 25px;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-width: 200px;
-  font-weight: 500;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  font-weight: 600;
+  border: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .primary-btn {
   background: var(--button-gradient);
   color: white;
-  border: none;
 }
 
 .secondary-btn {
-  background: transparent;
-  color: var(--text-primary);
-  border: 2px solid var(--primary-light);
+  background: var(--secondary-gradient);
+  color: white;
 }
 
 .primary-btn:hover, .secondary-btn:hover {
@@ -468,11 +444,9 @@ input.error-input {
 }
 
 .secondary-btn:hover {
-  background: var(--primary-light);
-  color: white;
+  background: var(--button-hover);
 }
 
-/* Animation styles */
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-5px); }
@@ -495,7 +469,6 @@ input.error-input {
   60% { transform: translateY(-5px); }
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .game-container {
     margin: 1rem;
@@ -508,7 +481,7 @@ input.error-input {
 
   .families-grid {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1rem;
   }
 
   .buttons {
@@ -519,7 +492,6 @@ input.error-input {
   .check-btn, .next-btn {
     width: 100%;
     max-width: 300px;
-    margin: 0.5rem 0;
   }
 
   .review-buttons {
@@ -533,10 +505,10 @@ input.error-input {
   }
 
   .sentence-card {
-    margin: 0 1rem;
+    padding: 1rem;
   }
 
   input {
-    max-width: 100%;
+    font-size: 1.1rem;
   }
 }

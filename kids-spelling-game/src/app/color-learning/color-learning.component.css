@@ -1,0 +1,584 @@
+/* COLOR LEARNING COMPONENT STYLES
+   Vibrant, child-friendly styles for color learning activities */
+
+/* MAIN CONTAINER */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* HEADER SECTION */
+.header-section {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.header-section h1 {
+  font-size: 3rem;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.subtitle {
+  font-size: 1.3rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+/* LESSON SELECTION */
+.lesson-selection {
+  margin-bottom: 3rem;
+}
+
+.lesson-selection h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  color: var(--text-primary);
+  margin-bottom: 2rem;
+}
+
+.lessons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* LESSON CARDS */
+.lesson-card {
+  background: var(--bg-card);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 3px solid transparent;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.lesson-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  border-color: var(--primary-light);
+}
+
+.lesson-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.lesson-card h3 {
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.lesson-card p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.lesson-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.feature {
+  background: var(--primary-gradient);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.start-btn {
+  background: var(--button-gradient);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.start-btn:hover {
+  background: var(--button-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* COLOR ACTIVITIES */
+.color-activity {
+  background: var(--bg-card);
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.color-activity h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  color: var(--text-primary);
+  margin-bottom: 2rem;
+}
+
+/* COLOR IDENTIFICATION GAME */
+.identification-game {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.question-area {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.question-area h3 {
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+}
+
+.color-display {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  margin: 0 auto;
+  border: 5px solid white;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  animation: pulse 2s infinite;
+}
+
+.answer-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.color-option {
+  background: var(--bg-glass);
+  border: 3px solid var(--primary-light);
+  border-radius: 15px;
+  padding: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.color-option:hover:not(:disabled) {
+  background: var(--primary-light);
+  color: white;
+  transform: translateY(-3px);
+}
+
+.color-option.correct {
+  background: var(--success-color);
+  color: white;
+  border-color: var(--success-color);
+}
+
+.color-option.incorrect {
+  background: var(--error-color);
+  color: white;
+  border-color: var(--error-color);
+}
+
+.color-option:disabled {
+  cursor: not-allowed;
+}
+
+/* RESULT MESSAGE */
+.result-message {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.message-content {
+  font-size: 1.5rem;
+  font-weight: 600;
+  padding: 1rem 2rem;
+  border-radius: 20px;
+}
+
+.message-content.success {
+  background: rgba(72, 187, 120, 0.2);
+  color: var(--success-color);
+  border: 2px solid var(--success-color);
+}
+
+.message-content.error {
+  background: rgba(245, 101, 101, 0.2);
+  color: var(--error-color);
+  border: 2px solid var(--error-color);
+}
+
+/* GAME CONTROLS */
+.game-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.next-btn {
+  background: var(--button-gradient);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.next-btn:hover {
+  background: var(--button-hover);
+  transform: translateY(-2px);
+}
+
+.score {
+  text-align: center;
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  margin-bottom: 2rem;
+  background: var(--bg-glass);
+  padding: 1rem 2rem;
+  border-radius: 25px;
+  display: inline-block;
+}
+
+/* COLOR MIXING GAME */
+.mixing-game {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.mixing-area {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.mixing-area h3 {
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+}
+
+.colors-to-mix {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.color-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.result-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: #666;
+}
+
+.plus, .equals {
+  font-size: 2rem;
+  color: var(--text-primary);
+  font-weight: bold;
+}
+
+.mixing-options {
+  margin-bottom: 2rem;
+}
+
+.mixing-options h4 {
+  text-align: center;
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.color-choices {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.color-choice {
+  background: var(--bg-glass);
+  border: 3px solid transparent;
+  border-radius: 15px;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.color-choice:hover {
+  border-color: var(--primary-light);
+  transform: translateY(-3px);
+}
+
+.color-choice.selected {
+  border-color: var(--success-color);
+  background: rgba(72, 187, 120, 0.2);
+}
+
+.mixing-controls {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.mix-btn, .next-mix-btn {
+  background: var(--button-gradient);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0 0.5rem;
+}
+
+.mix-btn:hover, .next-mix-btn:hover {
+  background: var(--button-hover);
+  transform: translateY(-2px);
+}
+
+.mix-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.mix-result {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+/* COLOR CHALLENGE GAME */
+.challenge-game {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.challenge-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  background: var(--bg-glass);
+  padding: 1.5rem;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.challenge-question {
+  margin-bottom: 2rem;
+}
+
+.challenge-question h3 {
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.color-match {
+  text-align: center;
+}
+
+.target-color {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin: 0 auto 2rem;
+  border: 5px solid white;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.color-tile {
+  width: 80px;
+  height: 80px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 3px solid transparent;
+}
+
+.color-tile:hover {
+  transform: scale(1.1);
+  border-color: var(--primary-light);
+}
+
+.color-sequence {
+  margin-bottom: 2rem;
+}
+
+.sequence-display {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.sequence-item {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+  font-weight: bold;
+}
+
+.sequence-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.sequence-option {
+  background: var(--bg-glass);
+  border: 3px solid transparent;
+  border-radius: 15px;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.sequence-option:hover {
+  border-color: var(--primary-light);
+  transform: translateY(-3px);
+}
+
+.challenge-result {
+  text-align: center;
+  margin: 2rem 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* LESSON CONTROLS */
+.lesson-controls {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.back-to-lessons-btn {
+  background: var(--secondary-gradient);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-to-lessons-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* ANIMATIONS */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .header-section h1 {
+    font-size: 2.5rem;
+  }
+  
+  .lessons-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .color-display {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .answer-options {
+    grid-template-columns: 1fr;
+  }
+  
+  .colors-to-mix {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .color-choices {
+    grid-template-columns: 1fr;
+  }
+  
+  .challenge-header {
+    padding: 1rem;
+  }
+  
+  .sequence-display {
+    flex-wrap: wrap;
+  }
+} 
