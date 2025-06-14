@@ -100,28 +100,23 @@ export class SpellingService {
 
   constructor() {}
 
-  // Get all word families
   getWordFamilies(): WordFamily[] {
     return this.wordFamilies;
   }
 
-  // Get specific word family
   getWordFamily(familyId: number): WordFamily | null {
     return this.wordFamilies.find(f => f.id === familyId) || null;
   }
 
-  // Set current family for the game
   setCurrentFamily(family: WordFamily): void {
     this.currentFamilySubject.next(family);
     this.currentWordIndexSubject.next(0);
   }
 
-  // Get current family
   getCurrentFamily(): WordFamily | null {
     return this.currentFamilySubject.value;
   }
 
-  // Get current word
   getCurrentWord(): Word | null {
     const family = this.getCurrentFamily();
     const index = this.currentWordIndexSubject.value;
@@ -132,7 +127,6 @@ export class SpellingService {
     return null;
   }
 
-  // Move to next word
   nextWord(): boolean {
     const family = this.getCurrentFamily();
     const currentIndex = this.currentWordIndexSubject.value;
@@ -144,13 +138,11 @@ export class SpellingService {
     return false;
   }
 
-  // Submit spelling attempt (placeholder for future backend integration)
   submitSpellingAttempt(wordId: number, familyId: number, isCorrect: boolean): void {
-    // TODO: Implement backend integration
+
     console.log('Spelling attempt:', { wordId, familyId, isCorrect });
   }
 
-  // Reset current game state
   resetGameState(): void {
     this.currentFamilySubject.next(null);
     this.currentWordIndexSubject.next(0);

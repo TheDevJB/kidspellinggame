@@ -1,35 +1,21 @@
-// Import the database/data configuration
 const db = require('../config/data');
 
-// CONTROLLER FUNCTIONS
-// Controllers contain the business logic for your application
-// They process requests, interact with data, and send responses
-// This separates concerns: routes handle URLs, controllers handle logic
 
-// ENHANCED SPELLING CONTROLLER
-// Handles spelling activities with grade-level progression, word families, and detailed feedback
-// Supports Pre-K through 5th grade with adaptive difficulty
 
-// GET SPELLING WORDS BY GRADE AND FAMILY
 exports.getSpellingWords = (req, res) => {
     try {
-        // Extract query parameters with defaults
         const grade = req.query.grade || 'pre-k';
-        const family = req.query.family; // Optional filter by word family
-        const difficulty = req.query.difficulty; // Optional filter by difficulty
+        const family = req.query.family;
+        const difficulty = req.query.difficulty;
         
-        // Start with all spelling words
         let words = db.spellingWords;
         
-        // Filter by grade
         words = words.filter(word => word.grade === grade);
         
-        // Filter by word family if specified
         if (family) {
             words = words.filter(word => word.family === family);
         }
         
-        // Filter by difficulty if specified
         if (difficulty) {
             words = words.filter(word => word.difficulty === difficulty);
         }
@@ -57,16 +43,13 @@ exports.getSpellingWords = (req, res) => {
     }
 };
 
-// GET RANDOM SPELLING WORD (Enhanced version)
 exports.getRandomWord = (req, res) => {
     try {
-        // Extract parameters with enhanced options
         const grade = req.query.grade || 'pre-k';
         const family = req.query.family;
         const difficulty = req.query.difficulty;
-        const userId = req.query.userId; // For personalized word selection
+        const userId = req.query.userId;
         
-        // Filter words based on criteria
         let availableWords = db.spellingWords.filter(word => word.grade === grade);
         
         if (family) {
@@ -84,16 +67,11 @@ exports.getRandomWord = (req, res) => {
             });
         }
         
-        // If userId provided, try to avoid recently practiced words
         if (userId) {
-            // This would be enhanced with a "recently practiced" tracking system
-            // For now, we'll just select randomly
         }
         
-        // Select random word
         const randomWord = availableWords[Math.floor(Math.random() * availableWords.length)];
         
-        // Prepare response with educational context
         const response = {
             word: {
                 id: randomWord.id,
@@ -127,12 +105,10 @@ exports.getRandomWord = (req, res) => {
     }
 };
 
-// CHECK SPELLING (Enhanced with detailed feedback)
 exports.checkSpelling = (req, res) => {
     try {
         const { wordId, attempt, userId, timeSpent } = req.body;
         
-        // Find the word in database
         const word = db.spellingWords.find(w => w.id === wordId);
         
         if (!word) {
@@ -142,7 +118,6 @@ exports.checkSpelling = (req, res) => {
             });
         }
         
-        // Validation: Check if attempt is provided
         if (!attempt || typeof attempt !== 'string') {
             return res.status(400).json({
                 message: 'Please provide a spelling attempt',
@@ -150,10 +125,8 @@ exports.checkSpelling = (req, res) => {
             });
         }
         
-        // Check if spelling is correct (case-insensitive)
         const isCorrect = word.word.toLowerCase() === attempt.toLowerCase();
         
-        // Calculate points based on grade level and correctness
         const gradePoints = {
             'pre-k': 10,
             'kindergarten': 12,
@@ -165,9 +138,8 @@ exports.checkSpelling = (req, res) => {
         };
         
         const basePoints = gradePoints[word.grade] || 10;
-        const points = isCorrect ? basePoints : Math.floor(basePoints * 0.3); // Partial points for trying
+        const points = isCorrect ? basePoints : Math.floor(basePoints * 0.3);
         
-        // Analyze the spelling attempt for detailed feedback
         let feedback = {
             correct: isCorrect,
             attempt: attempt,
@@ -184,7 +156,6 @@ exports.checkSpelling = (req, res) => {
         };
         
         if (isCorrect) {
-            // Correct spelling feedback
             feedback.message = `🎉 Perfect! You spelled "${word.word}" correctly!`;
             feedback.encouragement = [
                 'Excellent spelling!',
@@ -194,7 +165,6 @@ exports.checkSpelling = (req, res) => {
                 'You\'re getting better and better!'
             ][Math.floor(Math.random() * 5)];
             
-            // Bonus points for difficult words
             if (word.difficulty === 'hard' || word.difficulty === 'expert') {
                 const bonusPoints = Math.floor(basePoints * 0.5);
                 feedback.points += bonusPoints;
@@ -205,17 +175,14 @@ exports.checkSpelling = (req, res) => {
             }
             
         } else {
-            // Incorrect spelling feedback with helpful analysis
             feedback.message = `Good try! The correct spelling is "${word.word}".`;
             feedback.encouragement = 'Keep practicing! You\'re learning!';
             
-            // Provide specific feedback about the mistake
             feedback.analysis = analyzeSpellingMistake(attempt, word.word);
             feedback.hint = word.hint;
             feedback.practiceAdvice = `Try focusing on the "${word.family}" word family pattern.`;
         }
         
-        // Update user progress if userId provided
         if (userId) {
             updateUserSpellingProgress(userId, word, isCorrect, points, timeSpent);
         }
@@ -230,12 +197,10 @@ exports.checkSpelling = (req, res) => {
     }
 };
 
-// GET WORD FAMILIES BY GRADE
 exports.getWordFamilies = (req, res) => {
     try {
         const grade = req.query.grade || 'pre-k';
         
-        // Filter word families by grade
         const families = db.wordFamilies.filter(family => family.grade === grade);
         
         if (families.length === 0) {
@@ -245,7 +210,6 @@ exports.getWordFamilies = (req, res) => {
             });
         }
         
-        // Enhance families with word counts and progress info
         const enhancedFamilies = families.map(family => ({
             ...family,
             wordCount: family.words.length,
@@ -266,12 +230,10 @@ exports.getWordFamilies = (req, res) => {
     }
 };
 
-// ADD NEW SPELLING WORD (Enhanced admin function)
 exports.addWord = (req, res) => {
     try {
         const { word, grade, difficulty, family, hint, sentence, audio } = req.body;
         
-        // Enhanced validation
         if (!word || !grade || !family) {
             return res.status(400).json({
                 message: 'Word, grade, and family are required fields',
@@ -280,7 +242,6 @@ exports.addWord = (req, res) => {
             });
         }
         
-        // Validate grade
         const validGrades = ['pre-k', 'kindergarten', '1st', '2nd', '3rd', '4th', '5th'];
         if (!validGrades.includes(grade)) {
             return res.status(400).json({
@@ -290,7 +251,6 @@ exports.addWord = (req, res) => {
             });
         }
         
-        // Check if word already exists
         const existingWord = db.spellingWords.find(w => 
             w.word.toLowerCase() === word.toLowerCase() && w.grade === grade
         );
@@ -303,10 +263,8 @@ exports.addWord = (req, res) => {
             });
         }
         
-        // Generate new ID
         const newId = Math.max(...db.spellingWords.map(w => w.id), 0) + 1;
         
-        // Create new word object
         const newWord = {
             id: newId,
             word: word.toLowerCase(),
@@ -318,10 +276,8 @@ exports.addWord = (req, res) => {
             audio: audio || `${word.toLowerCase()}.mp3`
         };
         
-        // Add to database
         db.spellingWords.push(newWord);
         
-        // Update word family if it exists
         const familyIndex = db.wordFamilies.findIndex(f => f.family === family && f.grade === grade);
         if (familyIndex !== -1 && !db.wordFamilies[familyIndex].words.includes(word.toLowerCase())) {
             db.wordFamilies[familyIndex].words.push(word.toLowerCase());
@@ -340,12 +296,10 @@ exports.addWord = (req, res) => {
     }
 };
 
-// GET SPELLING PROGRESS FOR USER
 exports.getUserSpellingProgress = (req, res) => {
     try {
         const userId = parseInt(req.params.userId);
         
-        // Find user's spelling progress
         const progress = db.userProgress.find(p => 
             p.userId === userId && p.module === 'spelling'
         );
@@ -357,16 +311,13 @@ exports.getUserSpellingProgress = (req, res) => {
             });
         }
         
-        // Get user info
         const user = db.users.find(u => u.id === userId);
         
-        // Calculate detailed statistics
         const gradeWords = db.spellingWords.filter(w => w.grade === progress.grade);
         const completedWords = progress.completedLessons.length;
         const totalWords = gradeWords.length;
         const progressPercentage = Math.round((completedWords / totalWords) * 100);
         
-        // Get word family progress
         const wordFamilies = db.wordFamilies.filter(f => f.grade === progress.grade);
         const familyProgress = wordFamilies.map(family => {
             const familyWords = gradeWords.filter(w => w.family === family.family);
@@ -413,9 +364,7 @@ exports.getUserSpellingProgress = (req, res) => {
     }
 };
 
-// HELPER FUNCTIONS
 
-// Analyze spelling mistakes to provide helpful feedback
 function analyzeSpellingMistake(attempt, correct) {
     const analysis = {
         length: attempt.length === correct.length ? 'correct' : 'incorrect',
@@ -424,7 +373,6 @@ function analyzeSpellingMistake(attempt, correct) {
         suggestions: []
     };
     
-    // Simple suggestions based on common mistakes
     if (analysis.length === 'incorrect') {
         if (attempt.length < correct.length) {
             analysis.suggestions.push('Try adding more letters');
@@ -444,7 +392,6 @@ function analyzeSpellingMistake(attempt, correct) {
     return analysis;
 }
 
-// Update user's spelling progress
 function updateUserSpellingProgress(userId, word, isCorrect, points, timeSpent) {
     const progressIndex = db.userProgress.findIndex(p => 
         p.userId === userId && p.module === 'spelling'
@@ -453,12 +400,10 @@ function updateUserSpellingProgress(userId, word, isCorrect, points, timeSpent) 
     if (progressIndex !== -1) {
         const progress = db.userProgress[progressIndex];
         
-        // Update score and time
         progress.totalScore += points;
         if (timeSpent) progress.timeSpent += timeSpent;
         progress.lastUpdated = new Date().toISOString();
         
-        // Mark word as completed if correct and not already completed
         if (isCorrect) {
             const lessonName = `spelling-${word.id}`;
             if (!progress.completedLessons.includes(lessonName)) {
@@ -466,7 +411,6 @@ function updateUserSpellingProgress(userId, word, isCorrect, points, timeSpent) 
             }
         }
         
-        // Update user's total points
         const user = db.users.find(u => u.id === userId);
         if (user) {
             user.totalPoints += points;
@@ -475,16 +419,13 @@ function updateUserSpellingProgress(userId, word, isCorrect, points, timeSpent) 
     }
 }
 
-// Calculate spelling achievements
 function calculateSpellingAchievements(progress, completedWords) {
     const achievements = [];
     
-    // Word count achievements
     if (completedWords >= 10) achievements.push('Spelled 10 words correctly! 🌟');
     if (completedWords >= 25) achievements.push('Spelling Bee Champion! 🐝');
     if (completedWords >= 50) achievements.push('Word Master! 📚');
     
-    // Score achievements
     if (progress.totalScore >= 100) achievements.push('100 Points Club! 💯');
     if (progress.totalScore >= 500) achievements.push('Spelling Superstar! ⭐');
     

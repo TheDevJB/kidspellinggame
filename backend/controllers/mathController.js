@@ -1,6 +1,5 @@
 const db = require('../config/data');
 
-// Get a random math problem
 exports.getRandomProblem = (req, res) => {
     try {
         const difficulty = req.query.difficulty || 'easy';
@@ -16,7 +15,6 @@ exports.getRandomProblem = (req, res) => {
     }
 };
 
-// Check math answer
 exports.checkAnswer = (req, res) => {
     try {
         const { problemId, answer } = req.body;
@@ -36,7 +34,6 @@ exports.checkAnswer = (req, res) => {
     }
 };
 
-// Add new math problem (admin function)
 exports.addProblem = (req, res) => {
     try {
         const { question, answer, type, difficulty } = req.body;

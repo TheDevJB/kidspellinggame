@@ -1,17 +1,10 @@
-// SENTENCE BUILDING COMPONENT
-// This component provides sentence building activities for Kindergarten through 5th grade
-// Includes word order practice, fill-in-the-blank, and grammar exercises
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { NavTabsComponent } from '../shared/nav-tabs/nav-tabs.component';
 
-// ANGULAR IMPORTS
-import { Component, OnInit } from '@angular/core'; // Component base class and lifecycle hook
-import { CommonModule } from '@angular/common'; // Common Angular directives
-import { FormsModule } from '@angular/forms'; // For ngModel directive
-import { ActivatedRoute, Router } from '@angular/router'; // For route parameters and navigation
-import { HttpClient } from '@angular/common/http'; // For API calls
-import { NavTabsComponent } from '../shared/nav-tabs/nav-tabs.component'; // Navigation component
-
-// INTERFACES
-// Define the structure of sentence-related data
 interface SentenceActivity {
   id: number;
   type: 'word-order' | 'fill-blank' | 'grammar';
@@ -25,18 +18,13 @@ interface SentenceActivity {
   hint?: string;
 }
 
-// COMPONENT DECORATOR
 @Component({
-  // COMPONENT SELECTOR
   selector: 'app-sentence-building',
   
-  // STANDALONE COMPONENT
   standalone: true,
   
-  // IMPORTS
   imports: [CommonModule, FormsModule, NavTabsComponent],
   
-  // INLINE TEMPLATE
   template: `
     <!-- MAIN CONTAINER -->
     <div class="container">
@@ -280,18 +268,14 @@ interface SentenceActivity {
     </div>
   `,
   
-  // EXTERNAL STYLESHEET
   styleUrls: ['./sentence-building.component.css']
 })
 
-// COMPONENT CLASS
 export class SentenceBuildingComponent implements OnInit {
   
-  // COMPONENT PROPERTIES
   gradeLevel: string = '';
   selectedActivity: string | null = null;
   
-  // WORD ORDER PROPERTIES
   currentSentence: SentenceActivity | null = null;
   availableWords: string[] = [];
   selectedWords: string[] = [];
@@ -301,14 +285,12 @@ export class SentenceBuildingComponent implements OnInit {
   resultMessage: string = '';
   score: number = 0;
   
-  // FILL IN THE BLANK PROPERTIES
   sentenceParts: any[] = [];
   showFillResult: boolean = false;
   isFillCorrect: boolean = false;
   fillResultMessage: string = '';
   fillScore: number = 0;
   
-  // GRAMMAR PROPERTIES
   currentGrammarRule: any = null;
   currentGrammarQuestion: any = null;
   selectedGrammarOption: number | null = null;
@@ -317,7 +299,6 @@ export class SentenceBuildingComponent implements OnInit {
   grammarResultMessage: string = '';
   grammarScore: number = 0;
   
-  // SAMPLE DATA
   sentences: SentenceActivity[] = [
     {
       id: 1,
@@ -392,22 +373,18 @@ export class SentenceBuildingComponent implements OnInit {
     }
   ];
 
-  // DEPENDENCY INJECTION
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private http: HttpClient
   ) {}
 
-  // LIFECYCLE HOOK
   ngOnInit(): void {
-    // Get grade level from route parameter
     this.route.params.subscribe(params => {
       this.gradeLevel = params['grade'] || 'kindergarten';
     });
   }
 
-  // NAVIGATION METHODS
   goBack(): void {
     this.router.navigate(['/home']);
   }
@@ -417,7 +394,6 @@ export class SentenceBuildingComponent implements OnInit {
     this.resetAllGames();
   }
 
-  // ACTIVITY MANAGEMENT
   startActivity(activityType: string): void {
     this.selectedActivity = activityType;
     this.resetAllGames();
@@ -436,7 +412,6 @@ export class SentenceBuildingComponent implements OnInit {
   }
 
   resetAllGames(): void {
-    // Reset word order game
     this.currentSentence = null;
     this.availableWords = [];
     this.selectedWords = [];
@@ -444,12 +419,10 @@ export class SentenceBuildingComponent implements OnInit {
     this.showResult = false;
     this.score = 0;
     
-    // Reset fill blank game
     this.sentenceParts = [];
     this.showFillResult = false;
     this.fillScore = 0;
     
-    // Reset grammar game
     this.currentGrammarRule = null;
     this.currentGrammarQuestion = null;
     this.selectedGrammarOption = null;
@@ -457,19 +430,16 @@ export class SentenceBuildingComponent implements OnInit {
     this.grammarScore = 0;
   }
 
-  // WORD ORDER GAME
   startWordOrderGame(): void {
     this.nextSentence();
   }
 
   nextSentence(): void {
-    // Filter sentences by grade level
     const availableSentences = this.sentences.filter(s => 
       s.type === 'word-order' && s.grade === this.gradeLevel
     );
     
     if (availableSentences.length === 0) {
-      // Fallback to kindergarten sentences
       this.currentSentence = this.sentences.find(s => s.type === 'word-order') || null;
     } else {
       this.currentSentence = availableSentences[Math.floor(Math.random() * availableSentences.length)];
@@ -494,7 +464,6 @@ export class SentenceBuildingComponent implements OnInit {
     const removedWord = this.selectedWords[index];
     this.selectedWords.splice(index, 1);
     
-    // Find the original index of this word and remove it from usedWords
     const originalIndex = this.availableWords.findIndex((word, i) => 
       word === removedWord && this.usedWords.includes(i)
     );
@@ -525,7 +494,6 @@ export class SentenceBuildingComponent implements OnInit {
     }
   }
 
-  // FILL IN THE BLANK GAME
   startFillBlankGame(): void {
     this.nextFillBlank();
   }
@@ -559,7 +527,6 @@ export class SentenceBuildingComponent implements OnInit {
   }
 
   onBlankChange(): void {
-    // This method is called when a blank selection changes
   }
 
   allBlanksCompleted(): boolean {
@@ -581,7 +548,6 @@ export class SentenceBuildingComponent implements OnInit {
     }
   }
 
-  // GRAMMAR GAME
   startGrammarGame(): void {
     this.loadGrammarRule();
     this.nextGrammar();

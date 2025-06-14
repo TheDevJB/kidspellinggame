@@ -1,15 +1,12 @@
-// COMPREHENSIVE LEARNING PLATFORM DATA STRUCTURE
-// Expanded to support Pre-K through 5th grade with multiple learning modules
 
 const db = {
-  // USER MANAGEMENT SYSTEM
   users: [
     {
       id: 1,
       username: 'demo_student',
       name: 'Demo Student',
-      grade: 'kindergarten', // pre-k, kindergarten, 1st, 2nd, 3rd, 4th, 5th
-      avatar: 'bear', // bear, cat, dog, owl, fox, rabbit
+      grade: 'kindergarten',
+      avatar: 'bear',
       totalPoints: 150,
       streakDays: 3,
       createdAt: new Date().toISOString(),
@@ -17,7 +14,6 @@ const db = {
     }
   ],
 
-  // PROGRESS TRACKING FOR EACH USER
   userProgress: [
     {
       userId: 1,
@@ -26,12 +22,11 @@ const db = {
       completedLessons: ['basic-colors', 'color-matching'],
       currentLesson: 'color-mixing',
       totalScore: 85,
-      timeSpent: 1200, // seconds
+      timeSpent: 1200,
       lastUpdated: new Date().toISOString()
     }
   ],
 
-  // COLORS LEARNING MODULE (Pre-K to 1st Grade)
   colorLessons: [
     {
       id: 1,
@@ -63,58 +58,44 @@ const db = {
     }
   ],
 
-  // EXPANDED SPELLING SYSTEM WITH GRADE LEVELS
   spellingWords: [
-    // PRE-K WORDS (2-3 letters, basic sounds)
     { id: 1, word: 'cat', grade: 'pre-k', difficulty: 'easy', family: 'at', hint: 'A small furry pet', sentence: 'The cat is sleeping.', audio: 'cat.mp3' },
     { id: 2, word: 'bat', grade: 'pre-k', difficulty: 'easy', family: 'at', hint: 'Flies at night', sentence: 'The bat hangs upside down.', audio: 'bat.mp3' },
     { id: 3, word: 'hat', grade: 'pre-k', difficulty: 'easy', family: 'at', hint: 'You wear it on your head', sentence: 'I like your red hat.', audio: 'hat.mp3' },
     
-    // KINDERGARTEN WORDS (3-4 letters, simple patterns)
     { id: 4, word: 'jump', grade: 'kindergarten', difficulty: 'easy', family: 'ump', hint: 'Hop up and down', sentence: 'Can you jump high?', audio: 'jump.mp3' },
     { id: 5, word: 'play', grade: 'kindergarten', difficulty: 'medium', family: 'ay', hint: 'Have fun', sentence: 'Let\'s play outside today.', audio: 'play.mp3' },
     
-    // 1ST GRADE WORDS (4-5 letters, blends)
     { id: 6, word: 'friend', grade: '1st', difficulty: 'medium', family: 'end', hint: 'Someone you like', sentence: 'My best friend is kind.', audio: 'friend.mp3' },
     { id: 7, word: 'school', grade: '1st', difficulty: 'medium', family: 'ool', hint: 'Where you learn', sentence: 'I go to school every day.', audio: 'school.mp3' },
     
-    // 2ND GRADE WORDS (5-6 letters, complex patterns)
     { id: 8, word: 'rainbow', grade: '2nd', difficulty: 'hard', family: 'ow', hint: 'Colorful arc in sky', sentence: 'We saw a beautiful rainbow after the rain.', audio: 'rainbow.mp3' },
     { id: 9, word: 'butterfly', grade: '2nd', difficulty: 'hard', family: 'ly', hint: 'Colorful flying insect', sentence: 'The butterfly landed on the flower.', audio: 'butterfly.mp3' },
     
-    // 3RD GRADE WORDS (6-7 letters, prefixes/suffixes)
     { id: 10, word: 'wonderful', grade: '3rd', difficulty: 'hard', family: 'ful', hint: 'Amazing, great', sentence: 'What a wonderful surprise!', audio: 'wonderful.mp3' },
     { id: 11, word: 'playground', grade: '3rd', difficulty: 'hard', family: 'ound', hint: 'Where kids play at school', sentence: 'The playground has swings and slides.', audio: 'playground.mp3' },
     
-    // 4TH GRADE WORDS (7-8 letters, complex vocabulary)
     { id: 12, word: 'adventure', grade: '4th', difficulty: 'expert', family: 'ure', hint: 'Exciting journey', sentence: 'Reading books takes you on an adventure.', audio: 'adventure.mp3' },
     { id: 13, word: 'imagination', grade: '4th', difficulty: 'expert', family: 'tion', hint: 'Creative thinking', sentence: 'Use your imagination to write stories.', audio: 'imagination.mp3' },
     
-    // 5TH GRADE WORDS (8+ letters, advanced vocabulary)
     { id: 14, word: 'responsibility', grade: '5th', difficulty: 'expert', family: 'ity', hint: 'Being accountable', sentence: 'Taking care of pets is a big responsibility.', audio: 'responsibility.mp3' },
     { id: 15, word: 'extraordinary', grade: '5th', difficulty: 'expert', family: 'ary', hint: 'Very unusual, special', sentence: 'She has extraordinary talent in music.', audio: 'extraordinary.mp3' }
   ],
 
-  // WORD FAMILIES BY GRADE LEVEL
   wordFamilies: [
-    // PRE-K FAMILIES
     { id: 1, family: 'at', grade: 'pre-k', words: ['cat', 'bat', 'hat', 'mat', 'rat', 'fat'], color: '#FF6B6B' },
     { id: 2, family: 'an', grade: 'pre-k', words: ['can', 'man', 'pan', 'ran', 'fan', 'tan'], color: '#4ECDC4' },
     
-    // KINDERGARTEN FAMILIES
     { id: 3, family: 'ump', grade: 'kindergarten', words: ['jump', 'bump', 'pump', 'dump'], color: '#45B7D1' },
     { id: 4, family: 'ay', grade: 'kindergarten', words: ['play', 'day', 'way', 'say', 'may'], color: '#96CEB4' },
     
-    // 1ST GRADE FAMILIES
     { id: 5, family: 'end', grade: '1st', words: ['friend', 'send', 'bend', 'mend'], color: '#FFEAA7' },
     { id: 6, family: 'ool', grade: '1st', words: ['school', 'cool', 'pool', 'tool'], color: '#DDA0DD' },
     
-    // HIGHER GRADE FAMILIES
     { id: 7, family: 'ful', grade: '3rd', words: ['wonderful', 'helpful', 'colorful', 'peaceful'], color: '#98D8C8' },
     { id: 8, family: 'tion', grade: '4th', words: ['imagination', 'creation', 'vacation', 'celebration'], color: '#F7DC6F' }
   ],
 
-  // SENTENCE BUILDING ACTIVITIES
   sentenceActivities: [
     {
       id: 1,
@@ -145,7 +126,6 @@ const db = {
     }
   ],
 
-  // CAPITALIZATION RULES BY GRADE
   capitalizationRules: [
     {
       id: 1,
@@ -179,7 +159,6 @@ const db = {
     }
   ],
 
-  // ACHIEVEMENT SYSTEM
   achievements: [
     {
       id: 1,
@@ -215,7 +194,6 @@ const db = {
     }
   ],
 
-  // AVATAR SYSTEM
   avatars: [
     { id: 1, name: 'bear', displayName: 'Friendly Bear', unlockLevel: 1, image: 'bear.png' },
     { id: 2, name: 'cat', displayName: 'Curious Cat', unlockLevel: 5, image: 'cat.png' },
@@ -225,7 +203,6 @@ const db = {
     { id: 6, name: 'dragon', displayName: 'Magic Dragon', unlockLevel: 50, image: 'dragon.png' }
   ],
 
-  // LEGACY DATA (keeping for backward compatibility)
   mathProblems: [
     { id: 1, question: '2 + 2', answer: 4, type: 'addition', difficulty: 'easy' },
     { id: 2, question: '5 - 3', answer: 2, type: 'subtraction', difficulty: 'easy' },

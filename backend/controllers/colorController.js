@@ -1,16 +1,10 @@
-// COLOR LEARNING CONTROLLER
-// Handles color identification, color mixing, and interactive color activities
-// Designed for Pre-K and Kindergarten students
 
 const db = require('../config/data');
 
-// GET COLOR LESSONS BY GRADE
 exports.getColorLessons = (req, res) => {
     try {
-        // Get grade from query parameter or default to 'pre-k'
         const grade = req.query.grade || 'pre-k';
         
-        // Filter color lessons by grade level
         const lessons = db.colorLessons.filter(lesson => lesson.grade === grade);
         
         if (lessons.length === 0) {
@@ -34,12 +28,10 @@ exports.getColorLessons = (req, res) => {
     }
 };
 
-// GET SPECIFIC COLOR LESSON
 exports.getColorLesson = (req, res) => {
     try {
         const lessonId = parseInt(req.params.lessonId);
         
-        // Find the specific lesson
         const lesson = db.colorLessons.find(l => l.id === lessonId);
         
         if (!lesson) {
@@ -62,13 +54,10 @@ exports.getColorLesson = (req, res) => {
     }
 };
 
-// COLOR IDENTIFICATION ACTIVITY
-// Student clicks on colors and learns their names
 exports.colorIdentification = (req, res) => {
     try {
         const { lessonId, selectedColor, userId } = req.body;
         
-        // Find the lesson
         const lesson = db.colorLessons.find(l => l.id === lessonId);
         
         if (!lesson || lesson.type !== 'identification') {
@@ -78,7 +67,6 @@ exports.colorIdentification = (req, res) => {
             });
         }
         
-        // Find the selected color in the lesson
         const colorData = lesson.colors.find(c => c.name === selectedColor);
         
         if (!colorData) {
@@ -88,17 +76,13 @@ exports.colorIdentification = (req, res) => {
             });
         }
         
-        // Generate a random color question
         const allColors = lesson.colors;
         const correctColor = allColors[Math.floor(Math.random() * allColors.length)];
         
-        // Check if the selected color matches the question
         const isCorrect = selectedColor === correctColor.name;
         
-        // Calculate points based on correctness
         const points = isCorrect ? 10 : 0;
         
-        // Prepare response with encouragement
         const response = {
             correct: isCorrect,
             selectedColor: colorData,
@@ -112,7 +96,6 @@ exports.colorIdentification = (req, res) => {
                 ['Try again!', 'You can do it!', 'Keep learning!', 'Almost there!'][Math.floor(Math.random() * 4)]
         };
         
-        // Update user progress if userId provided
         if (userId && isCorrect) {
             const progressIndex = db.userProgress.findIndex(p => 
                 p.userId === userId && p.module === 'colors'
@@ -122,7 +105,6 @@ exports.colorIdentification = (req, res) => {
                 db.userProgress[progressIndex].totalScore += points;
                 db.userProgress[progressIndex].lastUpdated = new Date().toISOString();
                 
-                // Update user's total points
                 const user = db.users.find(u => u.id === userId);
                 if (user) {
                     user.totalPoints += points;
@@ -141,13 +123,10 @@ exports.colorIdentification = (req, res) => {
     }
 };
 
-// COLOR MIXING ACTIVITY
-// Students learn what happens when colors are mixed together
 exports.colorMixing = (req, res) => {
     try {
         const { lessonId, color1, color2, userId } = req.body;
         
-        // Find the color mixing lesson
         const lesson = db.colorLessons.find(l => l.id === lessonId);
         
         if (!lesson || lesson.type !== 'interactive') {
@@ -157,7 +136,6 @@ exports.colorMixing = (req, res) => {
             });
         }
         
-        // Validation: Check if both colors are provided
         if (!color1 || !color2) {
             return res.status(400).json({
                 message: 'Two colors are required for mixing',
@@ -165,15 +143,12 @@ exports.colorMixing = (req, res) => {
             });
         }
         
-        // Find the mixing rule for these colors
-        // Check both combinations: [color1, color2] and [color2, color1]
         let mixingRule = lesson.mixingRules.find(rule => 
             (rule.colors.includes(color1) && rule.colors.includes(color2)) &&
             rule.colors.length === 2
         );
         
         if (!mixingRule) {
-            // If no rule found, these colors don't mix in this lesson
             return res.json({
                 success: false,
                 message: `Hmm, ${color1} and ${color2} don't make a new color in this lesson. Try different colors! 🎨`,
@@ -185,8 +160,7 @@ exports.colorMixing = (req, res) => {
             });
         }
         
-        // Successful color mixing!
-        const points = 15; // More points for interactive activities
+        const points = 15;
         
         const response = {
             success: true,
@@ -203,7 +177,6 @@ exports.colorMixing = (req, res) => {
             ][Math.floor(Math.random() * 4)]
         };
         
-        // Update user progress
         if (userId) {
             const progressIndex = db.userProgress.findIndex(p => 
                 p.userId === userId && p.module === 'colors'
@@ -213,7 +186,6 @@ exports.colorMixing = (req, res) => {
                 db.userProgress[progressIndex].totalScore += points;
                 db.userProgress[progressIndex].lastUpdated = new Date().toISOString();
                 
-                // Update user's total points
                 const user = db.users.find(u => u.id === userId);
                 if (user) {
                     user.totalPoints += points;
@@ -232,13 +204,10 @@ exports.colorMixing = (req, res) => {
     }
 };
 
-// GET RANDOM COLOR CHALLENGE
-// Generates random color-based challenges for students
 exports.getColorChallenge = (req, res) => {
     try {
         const grade = req.query.grade || 'pre-k';
         
-        // Get lessons for the grade
         const lessons = db.colorLessons.filter(l => l.grade === grade);
         
         if (lessons.length === 0) {
@@ -248,13 +217,11 @@ exports.getColorChallenge = (req, res) => {
             });
         }
         
-        // Pick a random lesson
         const randomLesson = lessons[Math.floor(Math.random() * lessons.length)];
         
         let challenge;
         
         if (randomLesson.type === 'identification') {
-            // Create color identification challenge
             const randomColor = randomLesson.colors[Math.floor(Math.random() * randomLesson.colors.length)];
             
             challenge = {
@@ -267,7 +234,6 @@ exports.getColorChallenge = (req, res) => {
             };
             
         } else if (randomLesson.type === 'interactive') {
-            // Create color mixing challenge
             const randomRule = randomLesson.mixingRules[Math.floor(Math.random() * randomLesson.mixingRules.length)];
             
             challenge = {

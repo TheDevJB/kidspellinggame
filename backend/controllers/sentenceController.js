@@ -1,15 +1,10 @@
-// SENTENCE BUILDING & CAPITALIZATION CONTROLLER
-// Handles sentence construction, word order, capitalization rules, and grammar activities
-// Designed for Kindergarten through 5th grade
 
 const db = require('../config/data');
 
-// GET SENTENCE ACTIVITIES BY GRADE
 exports.getSentenceActivities = (req, res) => {
     try {
         const grade = req.query.grade || 'kindergarten';
         
-        // Filter sentence activities by grade level
         const activities = db.sentenceActivities.filter(activity => activity.grade === grade);
         
         if (activities.length === 0) {
@@ -33,13 +28,10 @@ exports.getSentenceActivities = (req, res) => {
     }
 };
 
-// WORD ORDER ACTIVITY
-// Students arrange scrambled words to form correct sentences
 exports.checkWordOrder = (req, res) => {
     try {
         const { activityId, userSentence, userId } = req.body;
         
-        // Find the activity
         const activity = db.sentenceActivities.find(a => a.id === activityId);
         
         if (!activity || activity.type !== 'word-order') {
@@ -49,7 +41,6 @@ exports.checkWordOrder = (req, res) => {
             });
         }
         
-        // Validation: Check if user provided a sentence
         if (!userSentence || !Array.isArray(userSentence)) {
             return res.status(400).json({
                 message: 'Please provide the sentence as an array of words',
@@ -58,11 +49,9 @@ exports.checkWordOrder = (req, res) => {
             });
         }
         
-        // Check if the user's sentence matches the correct sentence
         const userSentenceString = userSentence.join(' ');
         const isCorrect = userSentenceString === activity.correctSentence;
         
-        // Calculate points based on correctness and grade level
         const basePoints = 20;
         const gradeMultiplier = {
             'kindergarten': 1,
@@ -74,7 +63,6 @@ exports.checkWordOrder = (req, res) => {
         };
         const points = isCorrect ? Math.round(basePoints * (gradeMultiplier[activity.grade] || 1)) : 0;
         
-        // Prepare detailed feedback
         let feedback = {
             correct: isCorrect,
             userSentence: userSentenceString,
@@ -96,7 +84,6 @@ exports.checkWordOrder = (req, res) => {
             feedback.message = 'Good try! Let\'s look at the correct order.';
             feedback.encouragement = 'Keep practicing! You\'re getting better!';
             
-            // Provide specific feedback about what went wrong
             if (userSentence.length !== activity.scrambledWords.length) {
                 feedback.specificFeedback = 'Make sure to use all the words provided.';
             } else {
@@ -104,7 +91,6 @@ exports.checkWordOrder = (req, res) => {
             }
         }
         
-        // Update user progress
         if (userId && isCorrect) {
             const progressIndex = db.userProgress.findIndex(p => 
                 p.userId === userId && p.module === 'sentences'
@@ -114,13 +100,11 @@ exports.checkWordOrder = (req, res) => {
                 db.userProgress[progressIndex].totalScore += points;
                 db.userProgress[progressIndex].lastUpdated = new Date().toISOString();
                 
-                // Mark lesson as completed if not already
                 const lessonName = `word-order-${activityId}`;
                 if (!db.userProgress[progressIndex].completedLessons.includes(lessonName)) {
                     db.userProgress[progressIndex].completedLessons.push(lessonName);
                 }
                 
-                // Update user's total points
                 const user = db.users.find(u => u.id === userId);
                 if (user) {
                     user.totalPoints += points;
@@ -139,13 +123,10 @@ exports.checkWordOrder = (req, res) => {
     }
 };
 
-// FILL IN THE BLANK ACTIVITY
-// Students choose the correct word to complete sentences
 exports.checkFillBlank = (req, res) => {
     try {
         const { activityId, selectedWord, userId } = req.body;
         
-        // Find the activity
         const activity = db.sentenceActivities.find(a => a.id === activityId);
         
         if (!activity || activity.type !== 'fill-blank') {
@@ -155,10 +136,8 @@ exports.checkFillBlank = (req, res) => {
             });
         }
         
-        // Check if the selected word is correct
         const isCorrect = selectedWord === activity.correct;
         
-        // Calculate points
         const basePoints = 15;
         const gradeMultiplier = {
             'kindergarten': 1,
@@ -170,7 +149,6 @@ exports.checkFillBlank = (req, res) => {
         };
         const points = isCorrect ? Math.round(basePoints * (gradeMultiplier[activity.grade] || 1)) : 0;
         
-        // Create the completed sentence
         const completedSentence = activity.sentence.replace('_____', selectedWord);
         const correctSentence = activity.sentence.replace('_____', activity.correct);
         
@@ -199,7 +177,6 @@ exports.checkFillBlank = (req, res) => {
             feedback.explanation = activity.hint || 'Think about what makes sense in this sentence.';
         }
         
-        // Update user progress
         if (userId && isCorrect) {
             const progressIndex = db.userProgress.findIndex(p => 
                 p.userId === userId && p.module === 'sentences'
@@ -209,7 +186,6 @@ exports.checkFillBlank = (req, res) => {
                 db.userProgress[progressIndex].totalScore += points;
                 db.userProgress[progressIndex].lastUpdated = new Date().toISOString();
                 
-                // Update user's total points
                 const user = db.users.find(u => u.id === userId);
                 if (user) {
                     user.totalPoints += points;
@@ -228,13 +204,10 @@ exports.checkFillBlank = (req, res) => {
     }
 };
 
-// CAPITALIZATION ACTIVITY
-// Students identify and fix capitalization errors
 exports.checkCapitalization = (req, res) => {
     try {
         const { activityId, userSentence, userId } = req.body;
         
-        // Find the activity
         const activity = db.sentenceActivities.find(a => a.id === activityId);
         
         if (!activity || activity.type !== 'capitalization') {
@@ -244,11 +217,9 @@ exports.checkCapitalization = (req, res) => {
             });
         }
         
-        // Check if the user's sentence matches the correct capitalization
         const isCorrect = userSentence === activity.correctSentence;
         
-        // Calculate points
-        const basePoints = 25; // Higher points for capitalization as it's more complex
+        const basePoints = 25;
         const gradeMultiplier = {
             'kindergarten': 1,
             '1st': 1.2,
@@ -259,7 +230,6 @@ exports.checkCapitalization = (req, res) => {
         };
         const points = isCorrect ? Math.round(basePoints * (gradeMultiplier[activity.grade] || 1)) : 0;
         
-        // Analyze the errors for detailed feedback
         let errorAnalysis = [];
         if (!isCorrect) {
             activity.errors.forEach(errorWord => {
@@ -298,13 +268,11 @@ exports.checkCapitalization = (req, res) => {
             feedback.errorAnalysis = errorAnalysis;
             feedback.ruleReminder = activity.rule;
             
-            // Provide specific guidance
             if (errorAnalysis.length > 0) {
                 feedback.specificHelp = `Remember to capitalize: ${errorAnalysis.map(e => e.correct).join(', ')}`;
             }
         }
         
-        // Update user progress
         if (userId && isCorrect) {
             const progressIndex = db.userProgress.findIndex(p => 
                 p.userId === userId && p.module === 'capitalization'
@@ -314,13 +282,11 @@ exports.checkCapitalization = (req, res) => {
                 db.userProgress[progressIndex].totalScore += points;
                 db.userProgress[progressIndex].lastUpdated = new Date().toISOString();
                 
-                // Mark lesson as completed
                 const lessonName = `capitalization-${activityId}`;
                 if (!db.userProgress[progressIndex].completedLessons.includes(lessonName)) {
                     db.userProgress[progressIndex].completedLessons.push(lessonName);
                 }
                 
-                // Update user's total points
                 const user = db.users.find(u => u.id === userId);
                 if (user) {
                     user.totalPoints += points;
@@ -339,12 +305,10 @@ exports.checkCapitalization = (req, res) => {
     }
 };
 
-// GET CAPITALIZATION RULES BY GRADE
 exports.getCapitalizationRules = (req, res) => {
     try {
         const grade = req.query.grade || 'kindergarten';
         
-        // Filter capitalization rules by grade level
         const rules = db.capitalizationRules.filter(rule => rule.grade === grade);
         
         if (rules.length === 0) {
@@ -368,12 +332,10 @@ exports.getCapitalizationRules = (req, res) => {
     }
 };
 
-// GENERATE RANDOM SENTENCE CHALLENGE
 exports.getRandomSentenceChallenge = (req, res) => {
     try {
         const grade = req.query.grade || 'kindergarten';
         
-        // Get activities for the grade
         const activities = db.sentenceActivities.filter(a => a.grade === grade);
         
         if (activities.length === 0) {
@@ -383,10 +345,8 @@ exports.getRandomSentenceChallenge = (req, res) => {
             });
         }
         
-        // Pick a random activity
         const randomActivity = activities[Math.floor(Math.random() * activities.length)];
         
-        // Create challenge based on activity type
         let challenge = {
             id: randomActivity.id,
             type: randomActivity.type,

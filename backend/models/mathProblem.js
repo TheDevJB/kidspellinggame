@@ -1,4 +1,3 @@
-// Math Problem model structure
 class MathProblem {
     constructor(id, question, answer, difficulty, type) {
         this.id = id;

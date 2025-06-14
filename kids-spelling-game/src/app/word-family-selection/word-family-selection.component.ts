@@ -1,32 +1,18 @@
-// WORD FAMILY SELECTION COMPONENT
-// This component displays all available word families (like AT, AN, ING)
-// Students can choose which word family they want to practice
 
-// ANGULAR IMPORTS
-import { Component, OnInit } from '@angular/core'; // Component base class and lifecycle hook
-import { Router } from '@angular/router'; // For navigation to the spelling game
-import { CommonModule } from '@angular/common'; // Common Angular directives (ngFor, ngIf, ngClass)
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
-// CUSTOM IMPORTS
-import { SpellingService, WordFamily } from '../services/spelling.service'; // Service and interface for spelling data
-import { NavTabsComponent } from '../shared/nav-tabs/nav-tabs.component'; // Navigation component
+import { SpellingService, WordFamily } from '../services/spelling.service';
+import { NavTabsComponent } from '../shared/nav-tabs/nav-tabs.component';
 
-// COMPONENT DECORATOR
 @Component({
-  // COMPONENT SELECTOR
-  // HTML tag name: <app-word-family-selection></app-word-family-selection>
   selector: 'app-word-family-selection',
   
-  // STANDALONE COMPONENT
-  // Modern Angular 17+ feature - no NgModule required
   standalone: true,
   
-  // IMPORTS
-  // Modules and components this component uses
   imports: [CommonModule, NavTabsComponent],
   
-  // INLINE TEMPLATE
-  // HTML template defined directly in the TypeScript file
   template: `
     <!-- MAIN CONTAINER -->
     <div class="container">
@@ -79,62 +65,31 @@ import { NavTabsComponent } from '../shared/nav-tabs/nav-tabs.component'; // Nav
     </div>
   `,
   
-  // EXTERNAL STYLESHEET
-  // CSS styles are in a separate file
   styleUrls: ['./word-family-selection.component.css']
 })
 
-// COMPONENT CLASS
-// Implements OnInit interface, which requires ngOnInit() method
 export class WordFamilySelectionComponent implements OnInit {
   
-  // COMPONENT PROPERTIES
-  // Array to store all word families loaded from the service
   wordFamilies: WordFamily[] = [];
 
-  // DEPENDENCY INJECTION
-  // Angular automatically provides instances of these services
   constructor(
-    private spellingService: SpellingService, // Service for spelling-related data and operations
-    private router: Router // Service for navigation between routes
+    private spellingService: SpellingService,
+    private router: Router
   ) { }
 
-  // LIFECYCLE HOOK
-  // ngOnInit() is called after Angular initializes the component
-  // This is where you typically load initial data
   ngOnInit(): void {
-    // Load word families when component initializes
     this.loadWordFamilies();
   }
 
-  // COMPONENT METHODS
 
-  // LOAD WORD FAMILIES METHOD
-  // Fetches word families from the spelling service
   loadWordFamilies(): void {
-    // OBSERVABLE SUBSCRIPTION
-    // spellingService.getWordFamilies() returns an Observable
-    // .subscribe() tells Angular what to do when data arrives
     this.spellingService.getWordFamilies().subscribe(
-      // SUCCESS CALLBACK
-      // This function runs when data is successfully received
-      // 'families' parameter contains the word families data
       families => this.wordFamilies = families
       
-      // NOTE: In production, you'd also handle errors:
-      // families => this.wordFamilies = families,
-      // error => console.error('Error loading families:', error)
     );
   }
 
-  // SELECT FAMILY METHOD
-  // Called when user clicks on a word family card
-  // Navigates to the spelling game for the selected family
   selectFamily(family: WordFamily): void {
-    // ROUTER NAVIGATION
-    // Navigate to '/game/:familyId' route
-    // family.id becomes the route parameter
-    // Example: if family.id is 1, navigates to '/game/1'
     this.router.navigate(['/game', family.id]);
   }
 } 

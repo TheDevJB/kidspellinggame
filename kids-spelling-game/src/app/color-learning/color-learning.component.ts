@@ -1,16 +1,10 @@
-// COLOR LEARNING COMPONENT
-// This component provides color learning activities for Pre-K and Kindergarten students
-// Includes color identification, color mixing, and interactive challenges
 
-// ANGULAR IMPORTS
-import { Component, OnInit } from '@angular/core'; // Component base class and lifecycle hook
-import { CommonModule } from '@angular/common'; // Common Angular directives
-import { ActivatedRoute, Router } from '@angular/router'; // For route parameters and navigation
-import { HttpClient } from '@angular/common/http'; // For API calls
-import { NavTabsComponent } from '../shared/nav-tabs/nav-tabs.component'; // Navigation component
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { NavTabsComponent } from '../shared/nav-tabs/nav-tabs.component';
 
-// INTERFACES
-// Define the structure of color-related data
 interface Color {
   id: number;
   name: string;
@@ -29,18 +23,13 @@ interface ColorLesson {
   grade: string;
 }
 
-// COMPONENT DECORATOR
 @Component({
-  // COMPONENT SELECTOR
   selector: 'app-color-learning',
   
-  // STANDALONE COMPONENT
   standalone: true,
   
-  // IMPORTS
   imports: [CommonModule, NavTabsComponent],
   
-  // INLINE TEMPLATE
   template: `
     <!-- MAIN CONTAINER -->
     <div class="container">
@@ -263,18 +252,14 @@ interface ColorLesson {
     </div>
   `,
   
-  // EXTERNAL STYLESHEET
   styleUrls: ['./color-learning.component.css']
 })
 
-// COMPONENT CLASS
 export class ColorLearningComponent implements OnInit {
   
-  // COMPONENT PROPERTIES
   gradeLevel: string = '';
   selectedLesson: string | null = null;
   
-  // COLOR IDENTIFICATION PROPERTIES
   currentColor: Color | null = null;
   colorOptions: Color[] = [];
   selectedAnswer: number | null = null;
@@ -283,7 +268,6 @@ export class ColorLearningComponent implements OnInit {
   resultMessage: string = '';
   score: number = 0;
   
-  // COLOR MIXING PROPERTIES
   mixingChallenge: any = null;
   mixingChoices: Color[] = [];
   selectedMixResult: number | null = null;
@@ -292,7 +276,6 @@ export class ColorLearningComponent implements OnInit {
   isMixCorrect: boolean = false;
   mixResultMessage: string = '';
   
-  // COLOR CHALLENGE PROPERTIES
   challengeQuestion: any = null;
   challengeScore: number = 0;
   challengeLevel: number = 1;
@@ -301,7 +284,6 @@ export class ColorLearningComponent implements OnInit {
   isChallengeCorrect: boolean = false;
   challengeResultMessage: string = '';
   
-  // SAMPLE COLOR DATA
   colors: Color[] = [
     { id: 1, name: 'Red', hex: '#FF0000', rgb: '255,0,0', difficulty: 'easy', category: 'primary' },
     { id: 2, name: 'Blue', hex: '#0000FF', rgb: '0,0,255', difficulty: 'easy', category: 'primary' },
@@ -313,22 +295,18 @@ export class ColorLearningComponent implements OnInit {
     { id: 8, name: 'Brown', hex: '#A52A2A', rgb: '165,42,42', difficulty: 'hard', category: 'tertiary' }
   ];
 
-  // DEPENDENCY INJECTION
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private http: HttpClient
   ) {}
 
-  // LIFECYCLE HOOK
   ngOnInit(): void {
-    // Get grade level from route parameter
     this.route.params.subscribe(params => {
       this.gradeLevel = params['grade'] || 'pre-k';
     });
   }
 
-  // NAVIGATION METHODS
   goBack(): void {
     this.router.navigate(['/home']);
   }
@@ -338,7 +316,6 @@ export class ColorLearningComponent implements OnInit {
     this.resetAllGames();
   }
 
-  // LESSON MANAGEMENT
   startLesson(lessonType: string): void {
     this.selectedLesson = lessonType;
     this.resetAllGames();
@@ -357,20 +334,17 @@ export class ColorLearningComponent implements OnInit {
   }
 
   resetAllGames(): void {
-    // Reset identification game
     this.currentColor = null;
     this.colorOptions = [];
     this.selectedAnswer = null;
     this.showResult = false;
     this.score = 0;
     
-    // Reset mixing game
     this.mixingChallenge = null;
     this.selectedMixResult = null;
     this.mixedResult = null;
     this.showMixResult = false;
     
-    // Reset challenge game
     this.challengeQuestion = null;
     this.challengeScore = 0;
     this.challengeLevel = 1;
@@ -378,21 +352,17 @@ export class ColorLearningComponent implements OnInit {
     this.showChallengeResult = false;
   }
 
-  // COLOR IDENTIFICATION GAME
   startIdentificationGame(): void {
     this.nextColor();
   }
 
   nextColor(): void {
-    // Select appropriate colors based on grade level
     const availableColors = this.gradeLevel === 'pre-k' 
       ? this.colors.filter(c => c.difficulty === 'easy')
       : this.colors.filter(c => c.difficulty === 'easy' || c.difficulty === 'medium');
     
-    // Pick random color
     this.currentColor = availableColors[Math.floor(Math.random() * availableColors.length)];
     
-    // Create options (correct answer + 3 wrong answers)
     this.colorOptions = [this.currentColor];
     const wrongOptions = availableColors.filter(c => c.id !== this.currentColor!.id);
     for (let i = 0; i < 3 && wrongOptions.length > 0; i++) {
@@ -400,10 +370,8 @@ export class ColorLearningComponent implements OnInit {
       this.colorOptions.push(wrongOptions.splice(randomIndex, 1)[0]);
     }
     
-    // Shuffle options
     this.colorOptions = this.colorOptions.sort(() => Math.random() - 0.5);
     
-    // Reset state
     this.selectedAnswer = null;
     this.showResult = false;
   }
@@ -423,24 +391,20 @@ export class ColorLearningComponent implements OnInit {
     }
   }
 
-  // COLOR MIXING GAME
   startMixingGame(): void {
     this.nextMixing();
   }
 
   nextMixing(): void {
-    // Define mixing combinations
     const mixingCombos = [
-      { color1: '#FF0000', color2: '#FFFF00', result: '#FFA500', resultName: 'Orange' }, // Red + Yellow = Orange
-      { color1: '#0000FF', color2: '#FFFF00', result: '#00FF00', resultName: 'Green' },  // Blue + Yellow = Green
-      { color1: '#FF0000', color2: '#0000FF', result: '#800080', resultName: 'Purple' }  // Red + Blue = Purple
+      { color1: '#FF0000', color2: '#FFFF00', result: '#FFA500', resultName: 'Orange' },
+      { color1: '#0000FF', color2: '#FFFF00', result: '#00FF00', resultName: 'Green' },
+      { color1: '#FF0000', color2: '#0000FF', result: '#800080', resultName: 'Purple' }
     ];
     
-    // Pick random combination
     const combo = mixingCombos[Math.floor(Math.random() * mixingCombos.length)];
     this.mixingChallenge = combo;
     
-    // Create choices with proper RGB values based on the result color
     const getRgbFromHex = (hex: string): string => {
       const r = parseInt(hex.slice(1, 3), 16);
       const g = parseInt(hex.slice(3, 5), 16);
@@ -454,7 +418,6 @@ export class ColorLearningComponent implements OnInit {
       { id: 3, name: 'Brown', hex: '#A52A2A', rgb: '165,42,42', difficulty: 'hard' as const, category: 'tertiary' as const }
     ].sort(() => Math.random() - 0.5);
     
-    // Reset state
     this.selectedMixResult = null;
     this.mixedResult = null;
     this.showMixResult = false;
@@ -479,7 +442,6 @@ export class ColorLearningComponent implements OnInit {
     }
   }
 
-  // COLOR CHALLENGE GAME
   startChallengeGame(): void {
     this.generateChallengeQuestion();
     this.startTimer();
@@ -502,9 +464,8 @@ export class ColorLearningComponent implements OnInit {
         options: options
       };
     } else {
-      // Color sequence challenge
-      const sequence = ['#FF0000', '#00FF00', '#0000FF', null]; // Red, Green, Blue, ?
-      const correctAnswer = this.colors.find(c => c.hex === '#FFFF00'); // Yellow
+      const sequence = ['#FF0000', '#00FF00', '#0000FF', null];
+      const correctAnswer = this.colors.find(c => c.hex === '#FFFF00');
       const wrongOptions = this.colors.filter(c => c.hex !== '#FFFF00').slice(0, 2);
       const options = [correctAnswer!, ...wrongOptions].sort(() => Math.random() - 0.5);
       
@@ -530,7 +491,6 @@ export class ColorLearningComponent implements OnInit {
       this.challengeScore += 10 * this.challengeLevel;
       this.challengeResultMessage = '🏆 Excellent! You got it right!';
       
-      // Generate next question after delay
       setTimeout(() => {
         this.generateChallengeQuestion();
         this.challengeLevel++;
@@ -538,7 +498,6 @@ export class ColorLearningComponent implements OnInit {
     } else {
       this.challengeResultMessage = '💪 Keep trying! You can do it!';
       
-      // Try again after delay
       setTimeout(() => {
         this.showChallengeResult = false;
       }, 2000);
@@ -550,7 +509,6 @@ export class ColorLearningComponent implements OnInit {
       this.timeLeft--;
       if (this.timeLeft <= 0) {
         clearInterval(timer);
-        // End challenge
         this.challengeResultMessage = `🎯 Time's up! Final score: ${this.challengeScore}`;
         this.showChallengeResult = true;
       }

@@ -1,4 +1,3 @@
-// Spelling Word model structure
 class SpellingWord {
     constructor(id, word, difficulty, hint, category) {
         this.id = id;
