@@ -9,7 +9,7 @@ An interactive educational web application I developed to help children learn sp
 
 ## 📖 **About the Project**
 
-This educational spelling game helps children ages 3-9 learn spelling patterns through **word families**.
+Exciting educational spelling game that helps children ages 3-9 learn colors & spelling patterns through **word families**.
 
 ### 🎓 **Educational Value**
 - **Word & Sentencing Based Learning**: Focuses on word families and sentences to build spelling confidence
@@ -26,19 +26,11 @@ This educational spelling game helps children ages 3-9 learn spelling patterns t
 - **Progress Tracking**: Visual indicators for completed and in-progress families
 - **Score System**: Real-time scoring with encouraging feedback
 - **Sentence Review**: Practice words in context after completing families
-
-### 🛠️ **Technical Features**
-- **Angular 17+**: Latest framework with standalone components
-- **TypeScript**: Type-safe development with modern ES features
-- **CSS Custom Properties**: Dynamic theming system
-- **Local Storage**: Persistent theme preferences
-- **SSR Ready**: Server-side rendering configuration
-- **Performance Optimized**: Lazy loading and efficient change detection
-
+- 
 ## **Quick Start for Recruiters**
 
 ### **Prerequisites**
-- Node.js (v18+ recommended)
+- Node.js (v18+)
 - npm package manager
 - Any browser
 
@@ -85,20 +77,13 @@ This educational spelling game helps children ages 3-9 learn spelling patterns t
 - **Modular Design** with reusable components
 - **State Management** through services and BehaviorSubjects
 
-### **Styling Approach**
-- **CSS Custom Properties** for dynamic theming
-- **Mobile-First** responsive design
-- **Glass Morphism** effects with backdrop-filter
-- **Smooth Animations** using CSS transitions and keyframes
-- **Accessibility** considerations with proper contrast ratios
-
 ## 🔮 **Scalability Features**
 
 ### **Backend Ready**
-The project includes a scalable backend architecture designed for production use:
+I have a scalable backend architecture designed for production use:
 
 - **MySQL Database** for handling thousands of concurrent users
-- **RESTful API** with comprehensive endpoints
+- **RESTful API** endpoints
 - **User Management** system for classroom environments
 - **Progress Analytics** for teachers and parents
 - **Session Tracking** for detailed learning insights
