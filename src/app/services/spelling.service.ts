@@ -48,15 +48,22 @@ export class SpellingService {
   }
 
   // Get random word from database
-  getRandomWord(difficulty?: string, family?: string): Observable<Word> {
-    let params = '';
-    if (difficulty || family) {
-      const queryParams = [];
-      if (difficulty) queryParams.push(`difficulty=${difficulty}`);
-      if (family) queryParams.push(`family=${family}`);
-      params = '?' + queryParams.join('&');
+  getRandomWord(familyIdOrDifficulty?: number | string, family?: string): Observable<Word> {
+    // Handle both old signature (difficulty, family) and new signature (familyId)
+    if (typeof familyIdOrDifficulty === 'number') {
+      // New signature: getRandomWord(familyId)
+      return this.http.get<Word>(`${this.apiUrl}/families/${familyIdOrDifficulty}/random-word`);
+    } else {
+      // Old signature: getRandomWord(difficulty?, family?)
+      let params = '';
+      if (familyIdOrDifficulty || family) {
+        const queryParams = [];
+        if (familyIdOrDifficulty) queryParams.push(`difficulty=${familyIdOrDifficulty}`);
+        if (family) queryParams.push(`family=${family}`);
+        params = '?' + queryParams.join('&');
+      }
+      return this.http.get<Word>(`${this.apiUrl}/word${params}`);
     }
-    return this.http.get<Word>(`${this.apiUrl}/word${params}`);
   }
 
   // Check spelling attempt
@@ -65,6 +72,18 @@ export class SpellingService {
       wordId,
       userAnswer,
       userId
+    });
+  }
+
+  // Get review sentences for a word family
+  getReviewSentences(familyId: number): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/families/${familyId}/sentences`);
+  }
+
+  // Mark family as completed
+  markFamilyCompleted(familyId: number, userId?: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/families/${familyId}/complete`, {
+      userId: userId || 1 // Default user ID for now
     });
   }
 

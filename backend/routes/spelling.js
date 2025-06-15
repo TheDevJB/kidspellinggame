@@ -5,6 +5,9 @@ const spellingController = require('../controllers/spellingController');
 // Word families routes
 router.get('/families', spellingController.getWordFamilies);
 router.get('/families/:id', spellingController.getWordFamily);
+router.get('/families/:familyId/random-word', spellingController.getRandomWordFromFamily);
+router.get('/families/:familyId/sentences', spellingController.getReviewSentences);
+router.post('/families/:familyId/complete', spellingController.markFamilyCompleted);
 
 // Words routes
 router.get('/words', spellingController.getSpellingWords);

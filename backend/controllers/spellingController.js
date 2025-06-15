@@ -157,51 +157,7 @@ exports.checkSpelling = async (req, res) => {
     const word = words[0];
     const isCorrect = userAnswer.toLowerCase().trim() === word.word.toLowerCase();
 
-    // If user ID is provided, track progress
-    if (userId) {
-      // Check if progress record exists
-      const [existingProgress] = await pool.execute(
-        'SELECT * FROM user_progress WHERE user_id = ? AND word_id = ?',
-        [userId, wordId]
-      );
-
-      if (existingProgress.length > 0) {
-        // Update existing progress
-        const progress = existingProgress[0];
-        await pool.execute(
-          `UPDATE user_progress 
-           SET attempts = attempts + 1, 
-               correct_attempts = correct_attempts + ?, 
-               mastered = CASE WHEN correct_attempts + ? >= 3 THEN 1 ELSE mastered END,
-               last_attempt = CURRENT_TIMESTAMP
-           WHERE user_id = ? AND word_id = ?`,
-          [isCorrect ? 1 : 0, isCorrect ? 1 : 0, userId, wordId]
-        );
-      } else {
-        // Create new progress record
-        await pool.execute(
-          `INSERT INTO user_progress (user_id, word_id, family_id, attempts, correct_attempts, mastered)
-           VALUES (?, ?, ?, 1, ?, ?)`,
-          [userId, wordId, word.family_id, isCorrect ? 1 : 0, isCorrect && 1]
-        );
-      }
-
-      // Update word mastered status if needed
-      if (isCorrect) {
-        const [updatedProgress] = await pool.execute(
-          'SELECT correct_attempts FROM user_progress WHERE user_id = ? AND word_id = ?',
-          [userId, wordId]
-        );
-        
-        if (updatedProgress[0].correct_attempts >= 3) {
-          await pool.execute(
-            'UPDATE words SET mastered = 1 WHERE id = ?',
-            [wordId]
-          );
-        }
-      }
-    }
-
+    // Simple response without user progress tracking for now
     res.json({
       correct: isCorrect,
       correctWord: word.word,
@@ -285,5 +241,82 @@ exports.addWord = async (req, res) => {
   } catch (error) {
     console.error('Error adding word:', error);
     res.status(500).json({ message: 'Error adding word', error: error.message });
+  }
+};
+
+// Get random word from specific family
+exports.getRandomWordFromFamily = async (req, res) => {
+  try {
+    const familyId = parseInt(req.params.familyId);
+    
+    const [words] = await pool.execute(`
+      SELECT w.*, wf.name as family_name, wf.pattern, wf.difficulty
+      FROM words w
+      JOIN word_families wf ON w.family_id = wf.id
+      WHERE w.family_id = ?
+      ORDER BY RAND() 
+      LIMIT 1
+    `, [familyId]);
+    
+    if (words.length === 0) {
+      return res.status(404).json({ message: 'No words found in this family' });
+    }
+
+    res.json(words[0]);
+  } catch (error) {
+    console.error('Error fetching random word from family:', error);
+    res.status(500).json({ message: 'Error fetching random word from family', error: error.message });
+  }
+};
+
+// Get review sentences for a word family
+exports.getReviewSentences = async (req, res) => {
+  try {
+    const familyId = parseInt(req.params.familyId);
+    
+    const [words] = await pool.execute(
+      'SELECT example_sentence FROM words WHERE family_id = ? ORDER BY word',
+      [familyId]
+    );
+    
+    if (words.length === 0) {
+      return res.status(404).json({ message: 'No words found in this family' });
+    }
+
+    const sentences = words.map(word => word.example_sentence).filter(sentence => sentence);
+    res.json(sentences);
+  } catch (error) {
+    console.error('Error fetching review sentences:', error);
+    res.status(500).json({ message: 'Error fetching review sentences', error: error.message });
+  }
+};
+
+// Mark family as completed
+exports.markFamilyCompleted = async (req, res) => {
+  try {
+    const familyId = parseInt(req.params.familyId);
+    const { userId } = req.body;
+    
+    // Update family completion status (you might want to track this per user)
+    await pool.execute(
+      'UPDATE word_families SET completed = 1 WHERE id = ?',
+      [familyId]
+    );
+
+    // If userId provided, you could track individual user completion
+    if (userId) {
+      // This would require a user_family_progress table
+      // For now, we'll just acknowledge the completion
+      console.log(`User ${userId} completed family ${familyId}`);
+    }
+
+    res.json({ 
+      message: 'Family marked as completed',
+      familyId: familyId,
+      userId: userId 
+    });
+  } catch (error) {
+    console.error('Error marking family as completed:', error);
+    res.status(500).json({ message: 'Error marking family as completed', error: error.message });
   }
 };

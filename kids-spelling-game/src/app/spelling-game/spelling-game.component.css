@@ -148,54 +148,89 @@ h2 {
 input {
   padding: 1.2rem 1.5rem;
   font-size: 1.3rem;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 3px solid #667eea;
   border-radius: 25px;
   width: 100%;
   max-width: 400px;
   margin-bottom: 1.5rem;
-  background: var(--bg-card);
-  color: var(--text-primary);
+  background: #ffffff;
+  color: #2d3748;
   transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
   text-align: center;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+}
+
+input::placeholder {
+  color: #718096;
   font-weight: 500;
 }
 
 :root[data-theme="dark"] input {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(102, 126, 234, 0.3);
+  background: #2d3748;
+  border-color: #667eea;
   color: #ffffff;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
 }
 
 :root[data-theme="dark"] input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
+  color: #a0aec0;
 }
 
 input:focus {
   outline: none;
-  border-color: var(--primary-light);
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+  border-color: #4c51bf;
+  box-shadow: 
+    0 0 0 4px rgba(102, 126, 234, 0.3),
+    0 8px 25px rgba(102, 126, 234, 0.4);
   transform: scale(1.02);
 }
 
 :root[data-theme="dark"] input:focus {
-  border-color: rgba(102, 126, 234, 0.8);
+  border-color: #667eea;
   box-shadow: 
-    0 0 0 3px rgba(102, 126, 234, 0.4),
-    0 8px 24px rgba(102, 126, 234, 0.3);
+    0 0 0 4px rgba(102, 126, 234, 0.5),
+    0 8px 24px rgba(102, 126, 234, 0.4);
 }
 
 input.success-input {
-  border-color: var(--success-color);
-  box-shadow: 0 0 15px rgba(72, 187, 120, 0.3);
+  border-color: #48bb78;
+  background: #f0fff4;
+  color: #22543d;
+  box-shadow: 0 0 20px rgba(72, 187, 120, 0.4);
   animation: glow 1s ease-in-out;
 }
 
+:root[data-theme="dark"] input.success-input {
+  background: #1a202c;
+  color: #68d391;
+  border-color: #68d391;
+}
+
 input.error-input {
-  border-color: var(--error-color);
-  box-shadow: 0 0 15px rgba(245, 101, 101, 0.3);
+  border-color: #f56565;
+  background: #fff5f5;
+  color: #742a2a;
+  box-shadow: 0 0 20px rgba(245, 101, 101, 0.4);
   animation: shake 0.5s ease-in-out;
+}
+
+:root[data-theme="dark"] input.error-input {
+  background: #1a202c;
+  color: #fc8181;
+  border-color: #fc8181;
+}
+
+input[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: #f7fafc;
+  color: #a0aec0;
+}
+
+:root[data-theme="dark"] input[disabled] {
+  background: #1a202c;
+  color: #4a5568;
 }
 
 .buttons {
@@ -333,10 +368,11 @@ input.error-input {
 
 .progress {
   margin: 1rem 0;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 10px;
-  height: 8px;
-  overflow: hidden;
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  padding: 0.5rem;
 }
 
 .progress-bar {
@@ -389,6 +425,68 @@ input.error-input {
   margin: 0;
   line-height: 1.6;
   font-weight: 500;
+}
+
+/* Highlighted sentence styles */
+.highlighted-sentence {
+  position: relative;
+}
+
+.highlighted-word {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  color: #2D3748;
+  padding: 0.2rem 0.4rem;
+  border-radius: 6px;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.learned-word {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+.highlighted-word:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(255, 215, 0, 0.4);
+}
+
+/* Alternative highlighting styles - you can choose which one you prefer */
+.highlighted-word.underline-style {
+  background: none;
+  color: var(--text-primary);
+  border-bottom: 3px solid #FFD700;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 0.1rem 0.2rem;
+}
+
+.highlighted-word.glow-style {
+  background: rgba(255, 215, 0, 0.2);
+  color: var(--text-primary);
+  border: 2px solid #FFD700;
+  border-radius: 8px;
+  padding: 0.2rem 0.4rem;
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+@keyframes sparkle {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  50% { transform: scale(1.1) rotate(180deg); opacity: 0.8; }
+}
+
+@keyframes processing {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.check-btn.processing {
+  animation: processing 1s ease-in-out infinite;
+  cursor: wait;
 }
 
 .practice-btn {
@@ -449,8 +547,16 @@ input.error-input {
 
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+  20%, 40%, 60%, 80% { transform: translateX(10px); }
+}
+
+.shake {
+  animation: shake 0.6s ease-in-out;
+}
+
+.game-container.shake {
+  animation: shake 0.6s ease-in-out;
 }
 
 @keyframes fadeIn {

@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
@@ -21,6 +20,7 @@ export interface WordFamily {
   completed: boolean;
   inProgress: boolean;
   wordsLearned: number;
+  total_words: number;
 }
 
 @Injectable({
@@ -40,6 +40,7 @@ export class SpellingService {
       completed: false,
       inProgress: false,
       wordsLearned: 0,
+      total_words: 0,
       words: [
         { id: 1, word: 'cat', familyId: 1, exampleSentence: 'The cat sat on the mat.', mastered: false },
         { id: 2, word: 'hat', familyId: 1, exampleSentence: 'I wear my hat in the sun.', mastered: false },
@@ -56,6 +57,7 @@ export class SpellingService {
       completed: false,
       inProgress: false,
       wordsLearned: 0,
+      total_words: 0,
       words: [
         { id: 5, word: 'can', familyId: 2, exampleSentence: 'I can jump very high.', mastered: false },
         { id: 6, word: 'fan', familyId: 2, exampleSentence: 'The fan spins around.', mastered: false },
@@ -72,6 +74,7 @@ export class SpellingService {
       completed: false,
       inProgress: false,
       wordsLearned: 0,
+      total_words: 0,
       words: [
         { id: 9, word: 'sing', familyId: 3, exampleSentence: 'I love to sing songs.', mastered: false },
         { id: 10, word: 'ring', familyId: 3, exampleSentence: 'The bell will ring soon.', mastered: false },
@@ -95,12 +98,12 @@ export class SpellingService {
   }
 
   getRandomWord(familyId?: number): Observable<SpellingWord> {
-    // Fetch random word from MySQL database
-    let params = '';
+    // Fetch random word from MySQL database using the correct endpoint
     if (familyId) {
-      params = `?family=${familyId}`;
+      return this.http.get<SpellingWord>(`${this.apiUrl}/families/${familyId}/random-word`);
+    } else {
+      return this.http.get<SpellingWord>(`${this.apiUrl}/word`);
     }
-    return this.http.get<SpellingWord>(`${this.apiUrl}/word${params}`);
   }
 
   checkSpelling(wordId: number, attempt: string): Observable<any> {
@@ -122,13 +125,10 @@ export class SpellingService {
   }
 
   markFamilyCompleted(familyId: number): Observable<boolean> {
-    const family = this.wordFamilies.find(f => f.id === familyId);
-    if (family) {
-      family.completed = true;
-      family.inProgress = false;
-      return of(true);
-    }
-    return of(false);
+    // Mark family as completed in the database
+    return this.http.post<any>(`${this.apiUrl}/families/${familyId}/complete`, {
+      userId: 1 // Default user ID for now
+    });
   }
 
   resetFamily(familyId: number): Observable<boolean> {
@@ -144,10 +144,7 @@ export class SpellingService {
   }
 
   getReviewSentences(familyId: number): Observable<string[]> {
-    const family = this.wordFamilies.find(f => f.id === familyId);
-    if (family) {
-      return of(family.words.map((word: SpellingWord) => word.exampleSentence));
-    }
-    return of([]);
+    // Fetch review sentences from the database
+    return this.http.get<string[]>(`${this.apiUrl}/families/${familyId}/sentences`);
   }
 }

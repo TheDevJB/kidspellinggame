@@ -35,7 +35,7 @@
   <div *ngIf="selectedFamily && !showingReview" class="game-area">
     <h2>{{selectedFamily.name}} - Spelling Practice</h2>
     
-    <div class="score">Score: {{score}} | Words Learned: {{wordsLearned}}/{{selectedFamily.words.length}}</div>
+    <div class="score">Score: {{score}} | Words Learned: {{wordsLearned}}/{{selectedFamily.total_words}}</div>
     
     <div class="word-area">
       <div class="current-word" 
@@ -56,20 +56,21 @@
              [(ngModel)]="userInput" 
              (keyup.enter)="checkSpelling()"
              placeholder="Type the word here..."
-             [disabled]="isWordVisible"
+             [disabled]="isWordVisible || isProcessing"
              [class.success-input]="isSuccess"
              [class.error-input]="isError">
       
       <div class="buttons">
         <button class="check-btn" 
+                [class.processing]="isProcessing"
                 (click)="checkSpelling()" 
-                [disabled]="isWordVisible || !userInput.trim()">
-          Check Spelling
+                [disabled]="isWordVisible || !userInput.trim() || isProcessing">
+          {{isProcessing ? 'Checking...' : 'Check Spelling'}}
         </button>
         
         <button class="next-btn" 
                 (click)="loadNewWord()" 
-                [disabled]="isWordVisible">
+                [disabled]="isWordVisible || isProcessing">
           Next Word
         </button>
       </div>
@@ -83,9 +84,9 @@
       </div>
     </div>
 
-    <div class="progress">
-      Progress: {{wordsLearned}} / {{selectedFamily.words.length}} words learned
-    </div>
+          <div class="progress">
+        Progress: {{wordsLearned}} / {{selectedFamily.total_words}} words learned
+      </div>
   </div>
 
   <div *ngIf="showingReview" class="review-section">
@@ -94,8 +95,12 @@
       <p>Here are sentences using the words you learned:</p>
       
       <div class="sentences">
-        <div *ngFor="let sentence of reviewSentences; let i = index" class="sentence-card">
-          <p>{{sentence}}</p>
+        <div *ngFor="let sentence of highlightedSentences; let i = index" class="sentence-card">
+          <p class="highlighted-sentence">
+            <span *ngFor="let word of sentence" 
+                  [class.highlighted-word]="word.highlighted"
+                  [class.learned-word]="word.highlighted">{{word.text}}</span>
+          </p>
           
           <button class="practice-btn" (click)="practiceWord(i)">Practice This Word</button>
         </div>

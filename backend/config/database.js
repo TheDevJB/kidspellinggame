@@ -16,16 +16,23 @@ const dbConfig = {
 // Create connection pool
 const pool = mysql.createPool(dbConfig);
 
-// Test database connection
-async function testConnection() {
-  try {
-    const connection = await pool.getConnection();
-    console.log('✅ Connected to MySQL database successfully!');
-    connection.release();
-    return true;
-  } catch (error) {
-    console.error('❌ Error connecting to MySQL database:', error.message);
-    return false;
+// Test database connection with retry logic
+async function testConnection(retries = 5) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const connection = await pool.getConnection();
+      console.log('✅ Connected to MySQL database successfully!');
+      connection.release();
+      return true;
+    } catch (error) {
+      console.log(`❌ Database connection attempt ${i + 1}/${retries} failed:`, error.message);
+      if (i === retries - 1) {
+        console.error('❌ Error connecting to MySQL database after all retries:', error.message);
+        return false;
+      }
+      // Wait 2 seconds before retrying
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
   }
 }
 

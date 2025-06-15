@@ -1,4 +1,3 @@
-
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -27,6 +26,7 @@ export class SpellingGameComponent implements OnInit, OnDestroy {
   selectedFamily: WordFamily | null = null;
   currentWord: SpellingWord | null = null;
   reviewSentences: string[] = [];
+  highlightedSentences: { text: string; highlighted: boolean }[][] = [];
   
   userInput: string = '';
   message: string = '';
@@ -38,6 +38,7 @@ export class SpellingGameComponent implements OnInit, OnDestroy {
   isSuccess: boolean = false;
   isError: boolean = false;
   showingReview: boolean = false;
+  isProcessing: boolean = false;
   
   private fadeTimeout: any;
   private animationTimeout: any;
@@ -86,7 +87,7 @@ export class SpellingGameComponent implements OnInit, OnDestroy {
       this.spellingService.getWordFamily(this.familyId).subscribe(family => {
         if (family) {
           this.selectedFamily = family;
-          this.wordsLearned = family.wordsLearned;
+          this.wordsLearned = 0;
           this.loadNewWord();
         }
       });
@@ -95,23 +96,35 @@ export class SpellingGameComponent implements OnInit, OnDestroy {
 
   selectFamily(family: WordFamily) {
     this.selectedFamily = family;
+    this.familyId = family.id;
     this.score = 0;
-    this.wordsLearned = family.wordsLearned;
+    this.wordsLearned = 0;
     this.showingReview = false;
     this.loadNewWord();
   }
 
 
   loadNewWord(): void {
-    if (this.familyId) {
-      this.spellingService.getRandomWord(this.familyId).subscribe(word => {
-        this.currentWord = word;
-        this.userInput = '';
-        this.message = '';
-        this.isSuccess = false;
-        this.isError = false;
-        this.startWordDisplay();
+    const familyId = this.familyId || this.selectedFamily?.id;
+    
+    if (familyId) {
+      this.spellingService.getRandomWord(familyId).subscribe({
+        next: (word) => {
+          this.currentWord = word;
+          this.userInput = '';
+          this.message = '';
+          this.isSuccess = false;
+          this.isError = false;
+          this.startWordDisplay();
+        },
+        error: (error) => {
+          console.error('Error loading word:', error);
+          this.message = 'Error loading word. Please try again.';
+        }
       });
+    } else {
+      console.error('No family selected or family ID available');
+      this.message = 'Please select a word family first.';
     }
   }
 
@@ -139,13 +152,27 @@ export class SpellingGameComponent implements OnInit, OnDestroy {
 
 
   checkSpelling(): void {
-    if (!this.currentWord || this.isWordVisible || !this.userInput.trim()) return;
+    // Prevent spamming - exit if already processing or conditions not met
+    if (!this.currentWord || this.isWordVisible || !this.userInput.trim() || this.isProcessing) {
+      return;
+    }
 
-    this.spellingService.checkSpelling(this.currentWord.id, this.userInput).subscribe(result => {
-      if (result.correct) {
-        this.handleCorrectAnswer();
-      } else {
-        this.handleIncorrectAnswer();
+    // Set processing state to prevent multiple submissions
+    this.isProcessing = true;
+
+    this.spellingService.checkSpelling(this.currentWord.id, this.userInput).subscribe({
+      next: (result) => {
+        if (result && result.correct) {
+          this.handleCorrectAnswer();
+        } else {
+          this.handleIncorrectAnswer();
+        }
+      },
+      error: (error) => {
+        console.error('Error checking spelling:', error);
+        this.message = 'Error checking spelling. Please try again.';
+        this.isError = true;
+        this.isProcessing = false; // Reset processing state on error
       }
     });
   }
@@ -155,28 +182,36 @@ export class SpellingGameComponent implements OnInit, OnDestroy {
     this.isError = false;
     this.score += 10;
     this.message = 'Correct! Well done! 🌟';
-
-    if (this.selectedFamily) {
-      this.wordsLearned = this.selectedFamily.wordsLearned;
-    }
+    this.wordsLearned += 1;
 
     if (this.animationTimeout) {
       clearTimeout(this.animationTimeout);
     }
 
-    if (this.selectedFamily && this.wordsLearned >= this.selectedFamily.words.length) {
+    if (this.selectedFamily && this.wordsLearned >= this.selectedFamily.total_words) {
       this.completeFamily();
     } else {
       this.animationTimeout = setTimeout(() => {
         this.loadNewWord();
       }, 2000);
     }
+    
+    // Reset processing state after handling
+    this.isProcessing = false;
   }
 
   handleIncorrectAnswer() {
     this.isSuccess = false;
     this.isError = true;
     this.message = 'Keep trying! You can do it! 💪';
+
+    const gameContainer = document.querySelector('.game-container') as HTMLElement;
+    if (gameContainer) {
+      gameContainer.classList.add('shake');
+      setTimeout(() => {
+        gameContainer.classList.remove('shake');
+      }, 600);
+    }
 
     if (this.animationTimeout) {
       clearTimeout(this.animationTimeout);
@@ -185,6 +220,8 @@ export class SpellingGameComponent implements OnInit, OnDestroy {
     this.animationTimeout = setTimeout(() => {
       this.isError = false;
       this.message = '';
+      this.userInput = '';
+      this.isProcessing = false; // Reset processing state after timeout
     }, 2000);
   }
 
@@ -195,7 +232,28 @@ export class SpellingGameComponent implements OnInit, OnDestroy {
     this.spellingService.markFamilyCompleted(this.selectedFamily.id).subscribe(() => {
       this.spellingService.getReviewSentences(this.selectedFamily!.id).subscribe(sentences => {
         this.reviewSentences = sentences;
+        this.highlightedSentences = this.createHighlightedSentences(sentences);
         this.showingReview = true;
+      });
+    });
+  }
+
+  createHighlightedSentences(sentences: string[]): { text: string; highlighted: boolean }[][] {
+    if (!this.selectedFamily) return [];
+
+    const learnedWords = this.selectedFamily.words.map(word => word.word.toLowerCase());
+    
+    return sentences.map(sentence => {
+      const words = sentence.split(/(\s+|[.,!?;:])/);
+      
+      return words.map(word => {
+        const cleanWord = word.toLowerCase().replace(/[.,!?;:]/g, '');
+        const isLearned = learnedWords.includes(cleanWord);
+        
+        return {
+          text: word,
+          highlighted: isLearned && cleanWord.length > 0
+        };
       });
     });
   }
