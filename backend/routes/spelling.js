@@ -1,26 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const spellingController = require('../controllers/spellingController');
-const db = require('../config/data');
 
-router.get('/words', spellingController.getSpellingWords);
-
-router.get('/word', spellingController.getRandomWord);
-
+// Word families routes
 router.get('/families', spellingController.getWordFamilies);
+router.get('/families/:id', spellingController.getWordFamily);
 
-router.post('/check', spellingController.checkSpelling);
-
-router.get('/progress/:userId', spellingController.getUserSpellingProgress);
-
+// Words routes
+router.get('/words', spellingController.getSpellingWords);
+router.get('/word', spellingController.getRandomWord);
 router.post('/add', spellingController.addWord);
 
-router.get('/words/all', (req, res) => {
-    res.json({
-        message: 'All spelling words retrieved successfully',
-        totalWords: db.spellingWords.length,
-        words: db.spellingWords
-    });
-});
+// Spelling check and progress
+router.post('/check', spellingController.checkSpelling);
+router.get('/progress/:userId', spellingController.getUserProgress);
 
 module.exports = router;

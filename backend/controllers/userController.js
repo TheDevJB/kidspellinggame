@@ -1,6 +1,6 @@
 const db = require('../config/data');
 
-exports.createUser = (req, res) => {
+exports.registerUser = (req, res) => {
     try {
         const { username, name, grade } = req.body;
         
@@ -151,7 +151,7 @@ exports.getUserProfile = (req, res) => {
     }
 };
 
-exports.updateProgress = (req, res) => {
+exports.updateUserProgress = (req, res) => {
     try {
         const { userId, module, lessonCompleted, score, timeSpent } = req.body;
         
@@ -223,7 +223,7 @@ exports.getLeaderboard = (req, res) => {
     }
 };
 
-exports.updateAvatar = (req, res) => {
+exports.updateUserAvatar = (req, res) => {
     try {
         const userId = parseInt(req.params.userId);
         const { avatar } = req.body;

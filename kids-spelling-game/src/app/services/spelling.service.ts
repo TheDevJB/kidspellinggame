@@ -28,7 +28,7 @@ export interface WordFamily {
 })
 
 export class SpellingService {
-  private apiUrl = 'http:
+  private apiUrl = 'http://localhost:3000/api/spelling';
 
   private wordFamilies: WordFamily[] = [
     {
@@ -85,56 +85,30 @@ export class SpellingService {
 
 
   getWordFamilies(): Observable<WordFamily[]> {
-    return of(this.wordFamilies);
+    // Fetch from MySQL database instead of using hardcoded data
+    return this.http.get<WordFamily[]>(`${this.apiUrl}/families`);
   }
 
   getWordFamily(familyId: number): Observable<WordFamily | undefined> {
-    return of(this.wordFamilies.find(family => family.id === familyId));
+    // Fetch specific family from MySQL database
+    return this.http.get<WordFamily>(`${this.apiUrl}/families/${familyId}`);
   }
 
   getRandomWord(familyId?: number): Observable<SpellingWord> {
+    // Fetch random word from MySQL database
+    let params = '';
     if (familyId) {
-      const family = this.wordFamilies.find(f => f.id === familyId);
-      if (family) {
-        const unmastered = family.words.filter(w => !w.mastered);
-        if (unmastered.length > 0) {
-          const randomIndex = Math.floor(Math.random() * unmastered.length);
-          return of(unmastered[randomIndex]);
-        }
-        const randomIndex = Math.floor(Math.random() * family.words.length);
-        return of(family.words[randomIndex]);
-      }
+      params = `?family=${familyId}`;
     }
-    const allWords = this.wordFamilies.flatMap(f => f.words);
-    const randomIndex = Math.floor(Math.random() * allWords.length);
-    return of(allWords[randomIndex]);
+    return this.http.get<SpellingWord>(`${this.apiUrl}/word${params}`);
   }
 
   checkSpelling(wordId: number, attempt: string): Observable<any> {
-    const allWords = this.wordFamilies.flatMap(f => f.words);
-    
-    const word = allWords.find(w => w.id === wordId);
-    
-    const isCorrect = word?.word.toLowerCase() === attempt.toLowerCase();
-    
-    if (word && isCorrect && !word.mastered) {
-      word.mastered = true;
-      
-      const family = this.wordFamilies.find(f => f.id === word.familyId);
-      if (family) {
-        family.wordsLearned++;
-        family.inProgress = true;
-        
-        if (family.wordsLearned === family.words.length) {
-          family.completed = true;
-          family.inProgress = false;
-        }
-      }
-    }
-
-    return of({
-      correct: isCorrect,
-      word: word
+    // Send spelling attempt to MySQL database
+    return this.http.post(`${this.apiUrl}/check`, {
+      wordId: wordId,
+      userAnswer: attempt,
+      userId: 1 // You can make this dynamic later
     });
   }
 

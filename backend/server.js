@@ -1,7 +1,10 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const port = 3000;
+const { testConnection, initializeDatabase, seedDatabase } = require('./config/database');
+require('dotenv').config();
+
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -115,9 +118,34 @@ app.use((req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`🎓 Kids Learning Platform API Server listening at http://localhost:${port}`);
-  console.log(`📚 Supporting Pre-K through 5th grade learning modules`);
-  console.log(`🌟 Features: Spelling, Colors, Sentences, Capitalization, Progress Tracking`);
-  console.log(`📖 API Documentation available at: http://localhost:${port}`);
-});
+// Initialize database and start server
+async function startServer() {
+  try {
+    // Test database connection
+    const connected = await testConnection();
+    if (!connected) {
+      console.error('❌ Failed to connect to database. Please check your MySQL configuration.');
+      process.exit(1);
+    }
+
+    // Initialize database tables
+    await initializeDatabase();
+    
+    // Seed database with initial data
+    await seedDatabase();
+
+    // Start the server
+    app.listen(port, () => {
+      console.log(`🎓 Kids Learning Platform API Server listening at http://localhost:${port}`);
+      console.log(`📚 Supporting Pre-K through 5th grade learning modules`);
+      console.log(`🌟 Features: Spelling, Colors, Sentences, Capitalization, Progress Tracking`);
+      console.log(`💾 Database: MySQL connected and ready!`);
+      console.log(`📖 API Documentation available at: http://localhost:${port}`);
+    });
+  } catch (error) {
+    console.error('❌ Error starting server:', error.message);
+    process.exit(1);
+  }
+}
+
+startServer();

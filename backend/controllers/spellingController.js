@@ -1,433 +1,289 @@
-const db = require('../config/data');
+const { pool } = require('../config/database');
 
+// Get all word families with their words
+exports.getWordFamilies = async (req, res) => {
+  try {
+    const [families] = await pool.execute(`
+      SELECT wf.*, 
+             COUNT(w.id) as actual_word_count,
+             COUNT(CASE WHEN w.mastered = 1 THEN 1 END) as mastered_count
+      FROM word_families wf
+      LEFT JOIN words w ON wf.id = w.family_id
+      GROUP BY wf.id
+      ORDER BY wf.difficulty, wf.name
+    `);
 
-
-exports.getSpellingWords = (req, res) => {
-    try {
-        const grade = req.query.grade || 'pre-k';
-        const family = req.query.family;
-        const difficulty = req.query.difficulty;
-        
-        let words = db.spellingWords;
-        
-        words = words.filter(word => word.grade === grade);
-        
-        if (family) {
-            words = words.filter(word => word.family === family);
-        }
-        
-        if (difficulty) {
-            words = words.filter(word => word.difficulty === difficulty);
-        }
-        
-        if (words.length === 0) {
-            return res.status(404).json({
-                message: `No spelling words found for the specified criteria`,
-                criteria: { grade, family, difficulty },
-                availableGrades: ['pre-k', 'kindergarten', '1st', '2nd', '3rd', '4th', '5th']
-            });
-        }
-        
-        res.json({
-            message: 'Spelling words retrieved successfully',
-            criteria: { grade, family, difficulty },
-            count: words.length,
-            words: words
-        });
-        
-    } catch (error) {
-        res.status(500).json({
-            message: 'Error fetching spelling words',
-            error: error.message
-        });
+    // Get words for each family
+    for (let family of families) {
+      const [words] = await pool.execute(
+        'SELECT * FROM words WHERE family_id = ? ORDER BY word',
+        [family.id]
+      );
+      family.words = words;
+      family.words_learned = family.mastered_count;
+      family.total_words = family.actual_word_count;
     }
+
+    res.json(families);
+  } catch (error) {
+    console.error('Error fetching word families:', error);
+    res.status(500).json({ message: 'Error fetching word families', error: error.message });
+  }
 };
 
-exports.getRandomWord = (req, res) => {
-    try {
-        const grade = req.query.grade || 'pre-k';
-        const family = req.query.family;
-        const difficulty = req.query.difficulty;
-        const userId = req.query.userId;
-        
-        let availableWords = db.spellingWords.filter(word => word.grade === grade);
-        
-        if (family) {
-            availableWords = availableWords.filter(word => word.family === family);
-        }
-        
-        if (difficulty) {
-            availableWords = availableWords.filter(word => word.difficulty === difficulty);
-        }
-        
-        if (availableWords.length === 0) {
-            return res.status(404).json({
-                message: 'No words available for the specified criteria',
-                criteria: { grade, family, difficulty }
-            });
-        }
-        
-        if (userId) {
-        }
-        
-        const randomWord = availableWords[Math.floor(Math.random() * availableWords.length)];
-        
-        const response = {
-            word: {
-                id: randomWord.id,
-                word: randomWord.word,
-                grade: randomWord.grade,
-                difficulty: randomWord.difficulty,
-                family: randomWord.family,
-                hint: randomWord.hint,
-                sentence: randomWord.sentence,
-                audio: randomWord.audio
-            },
-            instructions: {
-                message: `Spell the word: "${randomWord.word}"`,
-                hint: `Hint: ${randomWord.hint}`,
-                sentence: `Example: ${randomWord.sentence}`,
-                family: `Word family: -${randomWord.family}`
-            },
-            metadata: {
-                totalWordsInGrade: db.spellingWords.filter(w => w.grade === grade).length,
-                totalWordsInFamily: db.spellingWords.filter(w => w.family === randomWord.family).length
-            }
-        };
-        
-        res.json(response);
-        
-    } catch (error) {
-        res.status(500).json({
-            message: 'Error getting random word',
-            error: error.message
-        });
-    }
-};
-
-exports.checkSpelling = (req, res) => {
-    try {
-        const { wordId, attempt, userId, timeSpent } = req.body;
-        
-        const word = db.spellingWords.find(w => w.id === wordId);
-        
-        if (!word) {
-            return res.status(404).json({
-                message: 'Word not found',
-                error: 'WORD_NOT_FOUND'
-            });
-        }
-        
-        if (!attempt || typeof attempt !== 'string') {
-            return res.status(400).json({
-                message: 'Please provide a spelling attempt',
-                error: 'MISSING_ATTEMPT'
-            });
-        }
-        
-        const isCorrect = word.word.toLowerCase() === attempt.toLowerCase();
-        
-        const gradePoints = {
-            'pre-k': 10,
-            'kindergarten': 12,
-            '1st': 15,
-            '2nd': 18,
-            '3rd': 20,
-            '4th': 25,
-            '5th': 30
-        };
-        
-        const basePoints = gradePoints[word.grade] || 10;
-        const points = isCorrect ? basePoints : Math.floor(basePoints * 0.3);
-        
-        let feedback = {
-            correct: isCorrect,
-            attempt: attempt,
-            correctSpelling: word.word,
-            points: points,
-            word: {
-                id: word.id,
-                word: word.word,
-                grade: word.grade,
-                family: word.family,
-                hint: word.hint,
-                sentence: word.sentence
-            }
-        };
-        
-        if (isCorrect) {
-            feedback.message = `🎉 Perfect! You spelled "${word.word}" correctly!`;
-            feedback.encouragement = [
-                'Excellent spelling!',
-                'You\'re a spelling star!',
-                'Amazing work!',
-                'Keep up the great spelling!',
-                'You\'re getting better and better!'
-            ][Math.floor(Math.random() * 5)];
-            
-            if (word.difficulty === 'hard' || word.difficulty === 'expert') {
-                const bonusPoints = Math.floor(basePoints * 0.5);
-                feedback.points += bonusPoints;
-                feedback.bonus = {
-                    points: bonusPoints,
-                    reason: `Bonus for spelling a ${word.difficulty} word!`
-                };
-            }
-            
-        } else {
-            feedback.message = `Good try! The correct spelling is "${word.word}".`;
-            feedback.encouragement = 'Keep practicing! You\'re learning!';
-            
-            feedback.analysis = analyzeSpellingMistake(attempt, word.word);
-            feedback.hint = word.hint;
-            feedback.practiceAdvice = `Try focusing on the "${word.family}" word family pattern.`;
-        }
-        
-        if (userId) {
-            updateUserSpellingProgress(userId, word, isCorrect, points, timeSpent);
-        }
-        
-        res.json(feedback);
-        
-    } catch (error) {
-        res.status(500).json({
-            message: 'Error checking spelling',
-            error: error.message
-        });
-    }
-};
-
-exports.getWordFamilies = (req, res) => {
-    try {
-        const grade = req.query.grade || 'pre-k';
-        
-        const families = db.wordFamilies.filter(family => family.grade === grade);
-        
-        if (families.length === 0) {
-            return res.status(404).json({
-                message: `No word families found for grade: ${grade}`,
-                availableGrades: ['pre-k', 'kindergarten', '1st', '2nd', '3rd', '4th', '5th']
-            });
-        }
-        
-        const enhancedFamilies = families.map(family => ({
-            ...family,
-            wordCount: family.words.length,
-            availableWords: db.spellingWords.filter(w => w.family === family.family && w.grade === grade).length
-        }));
-        
-        res.json({
-            message: 'Word families retrieved successfully',
-            grade: grade,
-            families: enhancedFamilies
-        });
-        
-    } catch (error) {
-        res.status(500).json({
-            message: 'Error fetching word families',
-            error: error.message
-        });
-    }
-};
-
-exports.addWord = (req, res) => {
-    try {
-        const { word, grade, difficulty, family, hint, sentence, audio } = req.body;
-        
-        if (!word || !grade || !family) {
-            return res.status(400).json({
-                message: 'Word, grade, and family are required fields',
-                error: 'MISSING_REQUIRED_FIELDS',
-                required: ['word', 'grade', 'family']
-            });
-        }
-        
-        const validGrades = ['pre-k', 'kindergarten', '1st', '2nd', '3rd', '4th', '5th'];
-        if (!validGrades.includes(grade)) {
-            return res.status(400).json({
-                message: 'Invalid grade level',
-                error: 'INVALID_GRADE',
-                validGrades: validGrades
-            });
-        }
-        
-        const existingWord = db.spellingWords.find(w => 
-            w.word.toLowerCase() === word.toLowerCase() && w.grade === grade
-        );
-        
-        if (existingWord) {
-            return res.status(400).json({
-                message: 'Word already exists for this grade level',
-                error: 'DUPLICATE_WORD',
-                existingWord: existingWord
-            });
-        }
-        
-        const newId = Math.max(...db.spellingWords.map(w => w.id), 0) + 1;
-        
-        const newWord = {
-            id: newId,
-            word: word.toLowerCase(),
-            grade: grade,
-            difficulty: difficulty || 'easy',
-            family: family,
-            hint: hint || `A word that rhymes with ${family}`,
-            sentence: sentence || `Here is the word ${word} in a sentence.`,
-            audio: audio || `${word.toLowerCase()}.mp3`
-        };
-        
-        db.spellingWords.push(newWord);
-        
-        const familyIndex = db.wordFamilies.findIndex(f => f.family === family && f.grade === grade);
-        if (familyIndex !== -1 && !db.wordFamilies[familyIndex].words.includes(word.toLowerCase())) {
-            db.wordFamilies[familyIndex].words.push(word.toLowerCase());
-        }
-        
-        res.status(201).json({
-            message: 'Spelling word added successfully',
-            word: newWord
-        });
-        
-    } catch (error) {
-        res.status(500).json({
-            message: 'Error adding spelling word',
-            error: error.message
-        });
-    }
-};
-
-exports.getUserSpellingProgress = (req, res) => {
-    try {
-        const userId = parseInt(req.params.userId);
-        
-        const progress = db.userProgress.find(p => 
-            p.userId === userId && p.module === 'spelling'
-        );
-        
-        if (!progress) {
-            return res.status(404).json({
-                message: 'No spelling progress found for this user',
-                error: 'PROGRESS_NOT_FOUND'
-            });
-        }
-        
-        const user = db.users.find(u => u.id === userId);
-        
-        const gradeWords = db.spellingWords.filter(w => w.grade === progress.grade);
-        const completedWords = progress.completedLessons.length;
-        const totalWords = gradeWords.length;
-        const progressPercentage = Math.round((completedWords / totalWords) * 100);
-        
-        const wordFamilies = db.wordFamilies.filter(f => f.grade === progress.grade);
-        const familyProgress = wordFamilies.map(family => {
-            const familyWords = gradeWords.filter(w => w.family === family.family);
-            const completedFamilyWords = progress.completedLessons.filter(lesson => 
-                familyWords.some(w => `spelling-${w.id}` === lesson)
-            );
-            
-            return {
-                family: family.family,
-                totalWords: familyWords.length,
-                completedWords: completedFamilyWords.length,
-                progress: Math.round((completedFamilyWords.length / familyWords.length) * 100),
-                color: family.color
-            };
-        });
-        
-        res.json({
-            message: 'Spelling progress retrieved successfully',
-            user: {
-                id: user.id,
-                name: user.name,
-                grade: user.grade
-            },
-            progress: {
-                module: 'spelling',
-                grade: progress.grade,
-                totalScore: progress.totalScore,
-                timeSpent: progress.timeSpent,
-                timeSpentFormatted: Math.floor(progress.timeSpent / 60) + ' minutes',
-                completedWords: completedWords,
-                totalWords: totalWords,
-                progressPercentage: progressPercentage,
-                lastUpdated: progress.lastUpdated
-            },
-            familyProgress: familyProgress,
-            achievements: calculateSpellingAchievements(progress, completedWords)
-        });
-        
-    } catch (error) {
-        res.status(500).json({
-            message: 'Error fetching spelling progress',
-            error: error.message
-        });
-    }
-};
-
-
-function analyzeSpellingMistake(attempt, correct) {
-    const analysis = {
-        length: attempt.length === correct.length ? 'correct' : 'incorrect',
-        firstLetter: attempt[0]?.toLowerCase() === correct[0]?.toLowerCase() ? 'correct' : 'incorrect',
-        lastLetter: attempt[attempt.length - 1]?.toLowerCase() === correct[correct.length - 1]?.toLowerCase() ? 'correct' : 'incorrect',
-        suggestions: []
-    };
+// Get specific word family by ID
+exports.getWordFamily = async (req, res) => {
+  try {
+    const familyId = parseInt(req.params.id);
     
-    if (analysis.length === 'incorrect') {
-        if (attempt.length < correct.length) {
-            analysis.suggestions.push('Try adding more letters');
-        } else {
-            analysis.suggestions.push('Try using fewer letters');
-        }
-    }
-    
-    if (analysis.firstLetter === 'incorrect') {
-        analysis.suggestions.push(`Try starting with "${correct[0].toUpperCase()}"`);
-    }
-    
-    if (analysis.lastLetter === 'incorrect') {
-        analysis.suggestions.push(`Try ending with "${correct[correct.length - 1]}"`);
-    }
-    
-    return analysis;
-}
-
-function updateUserSpellingProgress(userId, word, isCorrect, points, timeSpent) {
-    const progressIndex = db.userProgress.findIndex(p => 
-        p.userId === userId && p.module === 'spelling'
+    const [families] = await pool.execute(
+      'SELECT * FROM word_families WHERE id = ?',
+      [familyId]
     );
-    
-    if (progressIndex !== -1) {
-        const progress = db.userProgress[progressIndex];
-        
-        progress.totalScore += points;
-        if (timeSpent) progress.timeSpent += timeSpent;
-        progress.lastUpdated = new Date().toISOString();
-        
-        if (isCorrect) {
-            const lessonName = `spelling-${word.id}`;
-            if (!progress.completedLessons.includes(lessonName)) {
-                progress.completedLessons.push(lessonName);
-            }
-        }
-        
-        const user = db.users.find(u => u.id === userId);
-        if (user) {
-            user.totalPoints += points;
-            user.lastActive = new Date().toISOString();
-        }
-    }
-}
 
-function calculateSpellingAchievements(progress, completedWords) {
-    const achievements = [];
+    if (families.length === 0) {
+      return res.status(404).json({ message: 'Word family not found' });
+    }
+
+    const family = families[0];
     
-    if (completedWords >= 10) achievements.push('Spelled 10 words correctly! 🌟');
-    if (completedWords >= 25) achievements.push('Spelling Bee Champion! 🐝');
-    if (completedWords >= 50) achievements.push('Word Master! 📚');
+    // Get words for this family
+    const [words] = await pool.execute(
+      'SELECT * FROM words WHERE family_id = ? ORDER BY word',
+      [familyId]
+    );
+
+    family.words = words;
+    family.words_learned = words.filter(w => w.mastered).length;
+    family.total_words = words.length;
+
+    res.json(family);
+  } catch (error) {
+    console.error('Error fetching word family:', error);
+    res.status(500).json({ message: 'Error fetching word family', error: error.message });
+  }
+};
+
+// Get spelling words with optional filtering
+exports.getSpellingWords = async (req, res) => {
+  try {
+    const { grade, family, difficulty } = req.query;
     
-    if (progress.totalScore >= 100) achievements.push('100 Points Club! 💯');
-    if (progress.totalScore >= 500) achievements.push('Spelling Superstar! ⭐');
+    let query = `
+      SELECT w.*, wf.name as family_name, wf.pattern, wf.difficulty
+      FROM words w
+      JOIN word_families wf ON w.family_id = wf.id
+      WHERE 1=1
+    `;
+    const params = [];
+
+    if (family) {
+      query += ' AND wf.name = ?';
+      params.push(family.toUpperCase());
+    }
+
+    if (difficulty) {
+      query += ' AND wf.difficulty = ?';
+      params.push(difficulty);
+    }
+
+    query += ' ORDER BY wf.difficulty, wf.name, w.word';
+
+    const [words] = await pool.execute(query, params);
+    res.json(words);
+  } catch (error) {
+    console.error('Error fetching spelling words:', error);
+    res.status(500).json({ message: 'Error fetching spelling words', error: error.message });
+  }
+};
+
+// Get random word
+exports.getRandomWord = async (req, res) => {
+  try {
+    const { grade, family, difficulty } = req.query;
     
-    return achievements;
-}
+    let query = `
+      SELECT w.*, wf.name as family_name, wf.pattern, wf.difficulty
+      FROM words w
+      JOIN word_families wf ON w.family_id = wf.id
+      WHERE 1=1
+    `;
+    const params = [];
+
+    if (family) {
+      query += ' AND wf.name = ?';
+      params.push(family.toUpperCase());
+    }
+
+    if (difficulty) {
+      query += ' AND wf.difficulty = ?';
+      params.push(difficulty);
+    }
+
+    query += ' ORDER BY RAND() LIMIT 1';
+
+    const [words] = await pool.execute(query, params);
+    
+    if (words.length === 0) {
+      return res.status(404).json({ message: 'No words found matching criteria' });
+    }
+
+    res.json(words[0]);
+  } catch (error) {
+    console.error('Error fetching random word:', error);
+    res.status(500).json({ message: 'Error fetching random word', error: error.message });
+  }
+};
+
+// Check spelling attempt
+exports.checkSpelling = async (req, res) => {
+  try {
+    const { wordId, userAnswer, userId } = req.body;
+    
+    if (!wordId || !userAnswer) {
+      return res.status(400).json({ message: 'Word ID and user answer are required' });
+    }
+
+    // Get the correct word
+    const [words] = await pool.execute(
+      'SELECT w.*, wf.name as family_name FROM words w JOIN word_families wf ON w.family_id = wf.id WHERE w.id = ?',
+      [wordId]
+    );
+
+    if (words.length === 0) {
+      return res.status(404).json({ message: 'Word not found' });
+    }
+
+    const word = words[0];
+    const isCorrect = userAnswer.toLowerCase().trim() === word.word.toLowerCase();
+
+    // If user ID is provided, track progress
+    if (userId) {
+      // Check if progress record exists
+      const [existingProgress] = await pool.execute(
+        'SELECT * FROM user_progress WHERE user_id = ? AND word_id = ?',
+        [userId, wordId]
+      );
+
+      if (existingProgress.length > 0) {
+        // Update existing progress
+        const progress = existingProgress[0];
+        await pool.execute(
+          `UPDATE user_progress 
+           SET attempts = attempts + 1, 
+               correct_attempts = correct_attempts + ?, 
+               mastered = CASE WHEN correct_attempts + ? >= 3 THEN 1 ELSE mastered END,
+               last_attempt = CURRENT_TIMESTAMP
+           WHERE user_id = ? AND word_id = ?`,
+          [isCorrect ? 1 : 0, isCorrect ? 1 : 0, userId, wordId]
+        );
+      } else {
+        // Create new progress record
+        await pool.execute(
+          `INSERT INTO user_progress (user_id, word_id, family_id, attempts, correct_attempts, mastered)
+           VALUES (?, ?, ?, 1, ?, ?)`,
+          [userId, wordId, word.family_id, isCorrect ? 1 : 0, isCorrect && 1]
+        );
+      }
+
+      // Update word mastered status if needed
+      if (isCorrect) {
+        const [updatedProgress] = await pool.execute(
+          'SELECT correct_attempts FROM user_progress WHERE user_id = ? AND word_id = ?',
+          [userId, wordId]
+        );
+        
+        if (updatedProgress[0].correct_attempts >= 3) {
+          await pool.execute(
+            'UPDATE words SET mastered = 1 WHERE id = ?',
+            [wordId]
+          );
+        }
+      }
+    }
+
+    res.json({
+      correct: isCorrect,
+      correctWord: word.word,
+      userAnswer: userAnswer,
+      familyName: word.family_name,
+      exampleSentence: word.example_sentence
+    });
+
+  } catch (error) {
+    console.error('Error checking spelling:', error);
+    res.status(500).json({ message: 'Error checking spelling', error: error.message });
+  }
+};
+
+// Get user progress for spelling
+exports.getUserProgress = async (req, res) => {
+  try {
+    const userId = parseInt(req.params.userId);
+    
+    const [progress] = await pool.execute(`
+      SELECT 
+        wf.id as family_id,
+        wf.name as family_name,
+        wf.description,
+        wf.difficulty,
+        COUNT(w.id) as total_words,
+        COUNT(CASE WHEN up.mastered = 1 THEN 1 END) as mastered_words,
+        AVG(CASE WHEN up.attempts > 0 THEN (up.correct_attempts / up.attempts) * 100 ELSE 0 END) as accuracy
+      FROM word_families wf
+      LEFT JOIN words w ON wf.id = w.family_id
+      LEFT JOIN user_progress up ON w.id = up.word_id AND up.user_id = ?
+      GROUP BY wf.id, wf.name, wf.description, wf.difficulty
+      ORDER BY wf.difficulty, wf.name
+    `, [userId]);
+
+    res.json(progress);
+  } catch (error) {
+    console.error('Error fetching user progress:', error);
+    res.status(500).json({ message: 'Error fetching user progress', error: error.message });
+  }
+};
+
+// Add new word
+exports.addWord = async (req, res) => {
+  try {
+    const { word, familyId, exampleSentence } = req.body;
+    
+    if (!word || !familyId) {
+      return res.status(400).json({ message: 'Word and family ID are required' });
+    }
+
+    // Check if family exists
+    const [families] = await pool.execute(
+      'SELECT * FROM word_families WHERE id = ?',
+      [familyId]
+    );
+
+    if (families.length === 0) {
+      return res.status(404).json({ message: 'Word family not found' });
+    }
+
+    // Insert new word
+    const [result] = await pool.execute(
+      'INSERT INTO words (word, family_id, example_sentence) VALUES (?, ?, ?)',
+      [word.toLowerCase(), familyId, exampleSentence || `Example sentence with ${word}.`]
+    );
+
+    // Update total_words count in word_families
+    await pool.execute(
+      'UPDATE word_families SET total_words = (SELECT COUNT(*) FROM words WHERE family_id = ?) WHERE id = ?',
+      [familyId, familyId]
+    );
+
+    // Get the newly created word
+    const [newWord] = await pool.execute(
+      'SELECT w.*, wf.name as family_name FROM words w JOIN word_families wf ON w.family_id = wf.id WHERE w.id = ?',
+      [result.insertId]
+    );
+
+    res.status(201).json(newWord[0]);
+  } catch (error) {
+    console.error('Error adding word:', error);
+    res.status(500).json({ message: 'Error adding word', error: error.message });
+  }
+};
