@@ -13,25 +13,24 @@ const dbConfig = {
   queueLimit: 0
 };
 
-// Create connection pool
 const pool = mysql.createPool(dbConfig);
 
 // Test database connection with retry logic
-async function testConnection(retries = 5) {
+async function testConnection(retries = 3) {
   for (let i = 0; i < retries; i++) {
     try {
       const connection = await pool.getConnection();
-      console.log('✅ Connected to MySQL database successfully!');
+      console.log('Connected to MySQL database successfully!');
       connection.release();
       return true;
     } catch (error) {
-      console.log(`❌ Database connection attempt ${i + 1}/${retries} failed:`, error.message);
+      console.log(`Database connection attempt ${i + 1}/${retries} failed:`, error.message);
       if (i === retries - 1) {
-        console.error('❌ Error connecting to MySQL database after all retries:', error.message);
+        console.error('Error connecting to MySQL database after all retries:', error.message);
         return false;
       }
-      // Wait 2 seconds before retrying
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      //Waiting 10 seconds before retrying
+      await new Promise(resolve => setTimeout(resolve, 10000));
     }
   }
 }
@@ -102,28 +101,31 @@ async function initializeDatabase() {
       )
     `);
 
-    console.log('✅ Database tables initialized successfully!');
+    console.log('Database tables initialized successfully!');
     return true;
   } catch (error) {
-    console.error('❌ Error initializing database:', error.message);
+    console.error('Error initializing database:', error.message);
     return false;
   }
 }
 
-// Seed initial data
 async function seedDatabase() {
   try {
-    // Check if data already exists
     const [families] = await pool.execute('SELECT COUNT(*) as count FROM word_families');
     if (families[0].count > 0) {
-      console.log('📚 Database already has data, skipping seed...');
+      console.log('Database already has data, skipping seed...');
       return;
     }
 
     // Insert word families
     const wordFamilies = [
-      { name: 'AT', description: 'Words ending with -at sound', pattern: '_at', difficulty: 'easy', total_words: 8 },
-      { name: 'AN', description: 'Words ending with -an sound', pattern: '_an', difficulty: 'easy', total_words: 8 },
+      { name: 'AT', description: 'Words ending with -at sound', pattern: '_at', difficulty: 'easy', total_words: 14 },
+      { name: 'AN', description: 'Words ending with -an sound', pattern: '_an', difficulty: 'easy', total_words: 10 },
+      { name: 'AD', description: 'Words ending with -ad sound', pattern: '_ad', difficulty: 'easy', total_words: 6 },
+      { name: 'AM', description: 'Words ending with -am sound', pattern: '_am', difficulty: 'easy', total_words: 6 },
+      { name: 'IG', description: 'Words ending with -ig sound', pattern: '_ig', difficulty: 'easy', total_words: 6 },
+      { name: 'IT', description: 'Words ending with -it sound', pattern: '_it', difficulty: 'easy', total_words: 6 },
+      { name: 'OG', description: 'Words ending with -og sound', pattern: '_og', difficulty: 'easy', total_words: 6 },
       { name: 'ING', description: 'Words ending with -ing sound', pattern: '_ing', difficulty: 'medium', total_words: 8 },
       { name: 'OP', description: 'Words ending with -op sound', pattern: '_op', difficulty: 'easy', total_words: 6 },
       { name: 'UG', description: 'Words ending with -ug sound', pattern: '_ug', difficulty: 'easy', total_words: 6 },
@@ -138,67 +140,87 @@ async function seedDatabase() {
         [family.name, family.description, family.pattern, family.difficulty, family.total_words]
       );
       
-      // Insert words for each family
       let words = [];
       if (family.name === 'AT') {
         words = [
+          { word: 'at', example_sentence: 'We met at the park.' },
+          { word: 'bat', example_sentence: 'The bat flew through the sky.' },
           { word: 'cat', example_sentence: 'The cat is sleeping on the mat.' },
-          { word: 'bat', example_sentence: 'The baseball bat is made of wood.' },
-          { word: 'hat', example_sentence: 'She wore a red hat to the party.' },
-          { word: 'mat', example_sentence: 'Please wipe your feet on the mat.' },
+          { word: 'hat', example_sentence: 'She wore a red hat.' },
+          { word: 'mat', example_sentence: 'Wipe your feet on the mat.' },
           { word: 'rat', example_sentence: 'The rat ran through the maze.' },
-          { word: 'fat', example_sentence: 'The fat cat ate too much food.' },
-          { word: 'sat', example_sentence: 'She sat on the comfortable chair.' },
-          { word: 'pat', example_sentence: 'Give the dog a gentle pat.' }
+          { word: 'fat', example_sentence: 'The fat catate a lot of food.' },
+          { word: 'sat', example_sentence: 'She sat on the chair.' },
+          { word: 'pat', example_sentence: 'Give the dog a gentle pat.' },
+          { word: 'brat', example_sentence: 'The kid was a brat.'},
+          { word: 'that', example_sentence: 'That was really nice.'},
+          { word: 'chat', example_sentence: 'Let us go have a chat.'},
+          { word: 'flat', example_sentence: 'The floor is very flat.'},
+          { word: 'splat', example_sentence: 'The ice cream splat on the floor.'}
         ];
       } else if (family.name === 'AN') {
         words = [
+          { word: 'an', example_sentence: 'I am a student.'},
           { word: 'can', example_sentence: 'I can ride my bike to school.' },
           { word: 'man', example_sentence: 'The man walked his dog in the park.' },
-          { word: 'pan', example_sentence: 'Cook the eggs in a frying pan.' },
-          { word: 'ran', example_sentence: 'She ran as fast as she could.' },
-          { word: 'fan', example_sentence: 'Turn on the fan to cool the room.' },
-          { word: 'tan', example_sentence: 'His skin got tan from the sun.' },
-          { word: 'van', example_sentence: 'The delivery van arrived on time.' },
-          { word: 'plan', example_sentence: 'We need to make a plan for the trip.' }
+          { word: 'pan', example_sentence: 'Cook the eggs in a pan.' },
+          { word: 'ran', example_sentence: 'She ran very fast.' },
+          { word: 'fan', example_sentence: 'Turn on the fan.' },
+          { word: 'tan', example_sentence: 'He got a tan from the sun.' },
+          { word: 'van', example_sentence: 'We took the van for the field trip.' },
+          { word: 'plan', example_sentence: 'We need to make a plan.' },
+          { word: 'than', example_sentence: 'I am taller than my brother.'}
         ];
       } else if (family.name === 'ING') {
         words = [
           { word: 'sing', example_sentence: 'The birds sing beautiful songs.' },
           { word: 'ring', example_sentence: 'The phone will ring when someone calls.' },
-          { word: 'king', example_sentence: 'The king ruled the kingdom wisely.' },
+          { word: 'king', example_sentence: 'The king ruled the land.' },
           { word: 'wing', example_sentence: 'The bird flapped its wing to fly.' },
+          { word: 'ding', example_sentence: 'The doorbell will ding when grandma comes.' },
           { word: 'bring', example_sentence: 'Please bring your homework to class.' },
-          { word: 'thing', example_sentence: 'What is that strange thing over there?' },
-          { word: 'spring', example_sentence: 'Flowers bloom in the spring season.' },
-          { word: 'swing', example_sentence: 'The children love to swing at the playground.' }
+          { word: 'thing', example_sentence: 'What is that thing over there?' },
+          { word: 'spring', example_sentence: 'Flowers bloom in the spring.' },
+          { word: 'sting', example_sentence: 'Bees sting when they are angry.' },
+          { word: 'swing', example_sentence: 'The kids love to swing at the playground.' }
         ];
       } else if (family.name === 'OP') {
         words = [
           { word: 'hop', example_sentence: 'The bunny likes to hop around the yard.' },
-          { word: 'top', example_sentence: 'The spinning top spun very fast.' },
+          { word: 'bop', example_sentence: 'That song is a kids bop from nickelodeon.' },
+          { word: 'mop', example_sentence: 'Use the mop to clean the floor.' },
+          { word: 'top', example_sentence: 'We went to top of the mountain.' },
           { word: 'pop', example_sentence: 'The balloon will pop if you squeeze it.' },
-          { word: 'stop', example_sentence: 'Please stop at the red light.' },
-          { word: 'shop', example_sentence: 'We went to shop for groceries.' },
-          { word: 'drop', example_sentence: 'Be careful not to drop the glass.' }
+          { word: 'chop', example_sentence: 'I chop the vegetables for the soup.' },
+          { word: 'stop', example_sentence: 'Stop at the red light.' },
+          { word: 'shop', example_sentence: 'We went to shop at the store.' },
+          { word: 'drop', example_sentence: 'Be careful do not drop the glass.' },
+          { word: 'prop', example_sentence: 'I brought my favorite prop to school.'}
         ];
       } else if (family.name === 'UG') {
         words = [
           { word: 'bug', example_sentence: 'The little bug crawled on the leaf.' },
           { word: 'hug', example_sentence: 'Mom gave me a warm hug.' },
           { word: 'mug', example_sentence: 'I drink hot chocolate from my favorite mug.' },
-          { word: 'rug', example_sentence: 'The soft rug feels nice under my feet.' },
+          { word: 'dug', example_sentence: 'The dog dug a hole in the ground.' },
+          { word: 'rug', example_sentence: 'The rug is very soft.' },
           { word: 'tug', example_sentence: 'The dog likes to tug on the rope.' },
-          { word: 'jug', example_sentence: 'Pour the milk from the jug.' }
+          { word: 'jug', example_sentence: 'Pour the milk from the jug.' },
+          { word: 'chug', example_sentence: 'The kid took a chug.' },
+          { word: 'plug', example_sentence: 'There is a plug in the wall.' }
         ];
       } else if (family.name === 'ET') {
         words = [
           { word: 'pet', example_sentence: 'My pet dog loves to play fetch.' },
-          { word: 'net', example_sentence: 'The fisherman cast his net into the water.' },
+          { word: 'jet', example_sentence: 'The jet flew through the sky.' },
+          { word: 'bet', example_sentence: 'He bet his brother that he could jump higher.' },
+          { word: 'net', example_sentence: 'The ball got stuck in the tennis net.' },
           { word: 'wet', example_sentence: 'My clothes got wet in the rain.' },
           { word: 'get', example_sentence: 'Can you get me a glass of water?' },
           { word: 'let', example_sentence: 'Please let me help you with that.' },
-          { word: 'set', example_sentence: 'Set the table for dinner.' }
+          { word: 'set', example_sentence: 'Set the table for dinner.' },
+          { word: 'yet', example_sentence: 'We did not see the movie yet.' },
+          { word: 'vet', example_sentence: 'We took the dog to the vet.' }
         ];
       } else if (family.name === 'ICK') {
         words = [
@@ -229,9 +251,9 @@ async function seedDatabase() {
       }
     }
 
-    console.log('🌱 Database seeded with initial data successfully!');
+    console.log('Database seeded with initial data successfully!');
   } catch (error) {
-    console.error('❌ Error seeding database:', error.message);
+    console.error('Error seeding database:', error.message);
   }
 }
 

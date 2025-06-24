@@ -123,7 +123,7 @@ export class SpellingGameComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      console.error('No family selected or family ID available');
+      console.error('No family selected');
       this.message = 'Please select a word family first.';
     }
   }
@@ -152,12 +152,11 @@ export class SpellingGameComponent implements OnInit, OnDestroy {
 
 
   checkSpelling(): void {
-    // Prevent spamming - exit if already processing or conditions not met
+    // attempting to prevent spamming
     if (!this.currentWord || this.isWordVisible || !this.userInput.trim() || this.isProcessing) {
       return;
     }
-
-    // Set processing state to prevent multiple submissions
+//TODO: Figure out how to prevent spamming
     this.isProcessing = true;
 
     this.spellingService.checkSpelling(this.currentWord.id, this.userInput).subscribe({
@@ -172,7 +171,7 @@ export class SpellingGameComponent implements OnInit, OnDestroy {
         console.error('Error checking spelling:', error);
         this.message = 'Error checking spelling. Please try again.';
         this.isError = true;
-        this.isProcessing = false; // Reset processing state on error
+        this.isProcessing = false;
       }
     });
   }
@@ -196,7 +195,6 @@ export class SpellingGameComponent implements OnInit, OnDestroy {
       }, 2000);
     }
     
-    // Reset processing state after handling
     this.isProcessing = false;
   }
 
@@ -221,7 +219,7 @@ export class SpellingGameComponent implements OnInit, OnDestroy {
       this.isError = false;
       this.message = '';
       this.userInput = '';
-      this.isProcessing = false; // Reset processing state after timeout
+      this.isProcessing = false;
     }, 2000);
   }
 

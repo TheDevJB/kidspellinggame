@@ -14,7 +14,6 @@ interface SentenceActivity {
   blanks?: { word: string; position: number }[];
   options?: string[];
   difficulty: 'easy' | 'medium' | 'hard';
-  grade: string;
   hint?: string;
 }
 
@@ -26,23 +25,18 @@ interface SentenceActivity {
   imports: [CommonModule, FormsModule, NavTabsComponent],
   
   template: `
-    <!-- MAIN CONTAINER -->
     <div class="container">
-      <!-- NAVIGATION TABS -->
       <app-nav-tabs></app-nav-tabs>
       
-      <!-- BACK BUTTON -->
       <button class="back-button" (click)="goBack()">
-        ← Back to Activities
+        Back to  Learning Activities
       </button>
 
-      <!-- HEADER SECTION -->
       <div class="header-section">
-        <h1>📝 Sentence Building for {{gradeLevel | titlecase}}</h1>
+        <h1>Sentence Building</h1>
         <p class="subtitle">Learn to build perfect sentences!</p>
       </div>
 
-      <!-- ACTIVITY SELECTION -->
       <div class="activity-selection" *ngIf="!selectedActivity">
         <h2>Choose a Sentence Activity</h2>
         <div class="activities-grid">
@@ -158,12 +152,12 @@ interface SentenceActivity {
         </div>
       </div>
 
-      <!-- FILL IN THE BLANK ACTIVITY -->
+      <!-- FILL IN THE BLANK -->
       <div class="sentence-activity" *ngIf="selectedActivity === 'fill-blank'">
         <h2>Fill in the Blanks</h2>
         <div class="fill-blank-game">
           <div class="sentence-display">
-            <h3>Complete this sentence:</h3>
+            <h3>Complete the sentence:</h3>
             <div class="sentence-with-blanks">
               <span *ngFor="let part of sentenceParts; let i = index">
                 <span *ngIf="part.type === 'word'" class="sentence-word">{{part.text}}</span>
@@ -203,7 +197,7 @@ interface SentenceActivity {
         </div>
       </div>
 
-      <!-- GRAMMAR PRACTICE ACTIVITY -->
+      <!-- GRAMMAR PRACTICE -->
       <div class="sentence-activity" *ngIf="selectedActivity === 'grammar'">
         <h2>Grammar Practice</h2>
         <div class="grammar-game">
@@ -259,7 +253,6 @@ interface SentenceActivity {
         </div>
       </div>
 
-      <!-- ACTIVITY CONTROLS -->
       <div class="activity-controls" *ngIf="selectedActivity">
         <button class="back-to-activities-btn" (click)="backToActivities()">
           Choose Different Activity
@@ -298,7 +291,7 @@ export class SentenceBuildingComponent implements OnInit {
   isGrammarCorrect: boolean = false;
   grammarResultMessage: string = '';
   grammarScore: number = 0;
-  
+  //TODO: Figure a new way to implement sentence building
   sentences: SentenceActivity[] = [
     {
       id: 1,
@@ -307,7 +300,6 @@ export class SentenceBuildingComponent implements OnInit {
       scrambledWords: ['cat', 'sits', 'the', 'mat', 'on', 'The'],
       correctOrder: ['The', 'cat', 'sits', 'on', 'the', 'mat'],
       difficulty: 'easy',
-      grade: 'kindergarten',
       hint: 'Start with a capital letter'
     },
     {
@@ -317,7 +309,6 @@ export class SentenceBuildingComponent implements OnInit {
       scrambledWords: ['like', 'play', 'to', 'outside', 'I'],
       correctOrder: ['I', 'like', 'to', 'play', 'outside'],
       difficulty: 'easy',
-      grade: 'kindergarten',
       hint: 'Who is doing the action?'
     }
   ];
@@ -327,15 +318,13 @@ export class SentenceBuildingComponent implements OnInit {
       id: 1,
       sentence: 'The ___ is red.',
       blanks: [{ word: 'apple', position: 1, options: ['apple', 'car', 'book'] }],
-      difficulty: 'easy',
-      grade: 'kindergarten'
+      difficulty: 'easy'
     },
     {
       id: 2,
       sentence: 'I ___ to school every day.',
       blanks: [{ word: 'go', position: 1, options: ['go', 'run', 'fly'] }],
-      difficulty: 'easy',
-      grade: 'kindergarten'
+      difficulty: 'easy'
     }
   ];
 
@@ -344,15 +333,13 @@ export class SentenceBuildingComponent implements OnInit {
       id: 1,
       title: 'Capital Letters',
       explanation: 'Always start a sentence with a capital letter.',
-      examples: ['The dog runs fast.', 'My name is Sarah.', 'We go to school.'],
-      grade: 'kindergarten'
+      examples: ['The dog runs fast.', 'My name is Sarah.', 'We go to school.']
     },
     {
       id: 2,
       title: 'End Punctuation',
-      explanation: 'Every sentence needs to end with a period, question mark, or exclamation point.',
-      examples: ['I like ice cream.', 'What is your name?', 'That\'s amazing!'],
-      grade: 'kindergarten'
+      explanation: 'Every sentence has to end with a period, question mark, or exclamation point.',
+      examples: ['I like ice cream.', 'What is your name?', 'That\'s amazing!']
     }
   ];
 
@@ -360,16 +347,14 @@ export class SentenceBuildingComponent implements OnInit {
     {
       id: 1,
       question: 'Which sentence starts correctly?',
-      options: ['the cat is sleeping', 'The cat is sleeping', 'THE cat is sleeping'],
-      correctAnswer: 1,
-      grade: 'kindergarten'
+      options: ['the dog is sleeping', 'The dog is sleeping', 'THE dog is sleeping'],
+      correctAnswer: 1
     },
     {
       id: 2,
       question: 'Which sentence ends correctly?',
       options: ['I love pizza', 'I love pizza.', 'I love pizza,'],
-      correctAnswer: 1,
-      grade: 'kindergarten'
+      correctAnswer: 1
     }
   ];
 
@@ -378,12 +363,6 @@ export class SentenceBuildingComponent implements OnInit {
     private router: Router,
     private http: HttpClient
   ) {}
-
-  ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.gradeLevel = params['grade'] || 'kindergarten';
-    });
-  }
 
   goBack(): void {
     this.router.navigate(['/home']);
@@ -435,15 +414,11 @@ export class SentenceBuildingComponent implements OnInit {
   }
 
   nextSentence(): void {
-    const availableSentences = this.sentences.filter(s => 
-      s.type === 'word-order' && s.grade === this.gradeLevel
-    );
+    const availableSentences = this.sentences.filter(s => s.type === 'word-order');
     
-    if (availableSentences.length === 0) {
-      this.currentSentence = this.sentences.find(s => s.type === 'word-order') || null;
-    } else {
-      this.currentSentence = availableSentences[Math.floor(Math.random() * availableSentences.length)];
-    }
+    this.currentSentence = availableSentences.length > 0 
+      ? availableSentences[Math.floor(Math.random() * availableSentences.length)]
+      : null;
     
     if (this.currentSentence) {
       this.availableWords = [...(this.currentSentence.scrambledWords || [])];
@@ -554,16 +529,14 @@ export class SentenceBuildingComponent implements OnInit {
   }
 
   loadGrammarRule(): void {
-    const rules = this.grammarRules.filter(rule => rule.grade === this.gradeLevel);
-    this.currentGrammarRule = rules.length > 0 
-      ? rules[Math.floor(Math.random() * rules.length)]
+    this.currentGrammarRule = this.grammarRules.length > 0 
+      ? this.grammarRules[Math.floor(Math.random() * this.grammarRules.length)]
       : this.grammarRules[0];
   }
 
   nextGrammar(): void {
-    const questions = this.grammarQuestions.filter(q => q.grade === this.gradeLevel);
-    this.currentGrammarQuestion = questions.length > 0
-      ? questions[Math.floor(Math.random() * questions.length)]
+    this.currentGrammarQuestion = this.grammarQuestions.length > 0
+      ? this.grammarQuestions[Math.floor(Math.random() * this.grammarQuestions.length)]
       : this.grammarQuestions[0];
     
     this.selectedGrammarOption = null;

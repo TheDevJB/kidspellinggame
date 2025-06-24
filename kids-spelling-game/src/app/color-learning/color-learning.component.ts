@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -31,12 +30,9 @@ interface ColorLesson {
   imports: [CommonModule, NavTabsComponent],
   
   template: `
-    <!-- MAIN CONTAINER -->
     <div class="container">
-      <!-- NAVIGATION TABS -->
       <app-nav-tabs></app-nav-tabs>
       
-      <!-- BACK BUTTON -->
       <button class="back-button" (click)="goBack()">
         ← Back to Activities
       </button>
@@ -62,6 +58,8 @@ interface ColorLesson {
               <span class="feature">🟡 Yellow</span>
               <span class="feature">🔵 Blue</span>
               <span class="feature">🟢 Green</span>
+              <span class="feature">🟣 Purple</span>
+              <span class="feature">🟠 Orange</span>
             </div>
             <button class="start-btn">Start Learning!</button>
           </div>
@@ -387,7 +385,7 @@ export class ColorLearningComponent implements OnInit {
       this.score += 10;
       this.resultMessage = `🎉 Correct! That's ${this.currentColor?.name}!`;
     } else {
-      this.resultMessage = `Try again! That's ${this.currentColor?.name}.`;
+      this.resultMessage = `Lets Try again! That's ${this.currentColor?.name}.`;
     }
   }
 
