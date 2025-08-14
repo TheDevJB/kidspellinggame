@@ -264,7 +264,7 @@ interface SentenceActivity {
   styleUrls: ['./sentence-building.component.css']
 })
 
-export class SentenceBuildingComponent implements OnInit {
+export class SentenceBuildingComponent {
   
   gradeLevel: string = '';
   selectedActivity: string | null = null;

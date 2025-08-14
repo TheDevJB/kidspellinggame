@@ -39,6 +39,7 @@ export class SpellingGameComponent implements OnInit, OnDestroy {
   isError: boolean = false;
   showingReview: boolean = false;
   isProcessing: boolean = false;
+  hasAnswered: boolean = false;
   
   private fadeTimeout: any;
   private animationTimeout: any;
@@ -115,6 +116,7 @@ export class SpellingGameComponent implements OnInit, OnDestroy {
           this.message = '';
           this.isSuccess = false;
           this.isError = false;
+          this.hasAnswered = false;
           this.startWordDisplay();
         },
         error: (error) => {
@@ -153,7 +155,7 @@ export class SpellingGameComponent implements OnInit, OnDestroy {
 
   checkSpelling(): void {
     // attempting to prevent spamming
-    if (!this.currentWord || this.isWordVisible || !this.userInput.trim() || this.isProcessing) {
+    if (!this.currentWord || this.isWordVisible || !this.userInput.trim() || this.isProcessing || this.hasAnswered) {
       return;
     }
 //TODO: Figure out how to prevent spamming
@@ -177,6 +179,7 @@ export class SpellingGameComponent implements OnInit, OnDestroy {
   }
 
   handleCorrectAnswer() {
+    this.hasAnswered = true;
     this.isSuccess = true;
     this.isError = false;
     this.score += 10;
@@ -201,7 +204,7 @@ export class SpellingGameComponent implements OnInit, OnDestroy {
   handleIncorrectAnswer() {
     this.isSuccess = false;
     this.isError = true;
-    this.message = 'Keep trying! You can do it! 💪';
+    this.message = 'Oops try again! You can do it!';
 
     const gameContainer = document.querySelector('.game-container') as HTMLElement;
     if (gameContainer) {
