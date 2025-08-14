@@ -23,7 +23,7 @@ export class ThemeService {
       if (savedTheme) {
         this.setTheme(savedTheme);
       } else {
-        this.setTheme('light');
+        this.setTheme('dark');
       }
     }
   }
