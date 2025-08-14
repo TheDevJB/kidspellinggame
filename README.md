@@ -1,8 +1,8 @@
-# 🎯 Kids Spelling Game Math coming soon
+# Kids Spelling Game Math coming soon
 
 An interactive educational web application I developed to help children learn spelling through engaging word family exercises. I am stoked at what I created and the time spent.
 
-## 📖 **About the Project**
+## **About the Project**
 
 Exciting educational spelling game that helps children learn colors & spelling patterns through different types of spelling patterns.
 
