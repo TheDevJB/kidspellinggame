@@ -29,16 +29,15 @@ async function testConnection(retries = 3) {
         console.error('Error connecting to MySQL database after all retries:', error.message);
         return false;
       }
-      //Waiting 10 seconds before retrying
       await new Promise(resolve => setTimeout(resolve, 10000));
     }
   }
 }
 
-// Initialize database tables
+//Initialize database tables
 async function initializeDatabase() {
   try {
-    // Create word_families table
+    //Create word_families table
     await pool.execute(`
       CREATE TABLE IF NOT EXISTS word_families (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -55,7 +54,7 @@ async function initializeDatabase() {
       )
     `);
 
-    // Create words table
+    //Create words table
     await pool.execute(`
       CREATE TABLE IF NOT EXISTS words (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -69,7 +68,7 @@ async function initializeDatabase() {
       )
     `);
 
-    // Create users table
+    //Create users table
     await pool.execute(`
       CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -84,7 +83,7 @@ async function initializeDatabase() {
       )
     `);
 
-    // Create user_progress table
+    //Create user_progress table
     await pool.execute(`
       CREATE TABLE IF NOT EXISTS user_progress (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -117,7 +116,6 @@ async function seedDatabase() {
       return;
     }
 
-    // Insert word families
     const wordFamilies = [
       { name: 'AT', description: 'Words ending with -at sound', pattern: '_at', difficulty: 'easy', total_words: 14 },
       { name: 'AN', description: 'Words ending with -an sound', pattern: '_an', difficulty: 'easy', total_words: 10 },

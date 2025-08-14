@@ -9,19 +9,14 @@ import { NavTabsComponent } from '../shared/nav-tabs/nav-tabs.component';
 
 @Component({
   selector: 'app-spelling-game',
-  
   standalone: true,
-  
   imports: [CommonModule, FormsModule, NavTabsComponent],
-  
   templateUrl: './spelling-game.component.html',
-  
   styleUrls: ['./spelling-game.component.css']
 })
 
 export class SpellingGameComponent implements OnInit, OnDestroy {
-  
-  
+    
   wordFamilies: WordFamily[] = [];
   selectedFamily: WordFamily | null = null;
   currentWord: SpellingWord | null = null;

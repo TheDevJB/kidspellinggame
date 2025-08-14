@@ -1,4 +1,3 @@
-
 const db = {
   users: [
     {

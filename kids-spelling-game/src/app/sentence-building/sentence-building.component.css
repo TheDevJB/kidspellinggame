@@ -521,13 +521,23 @@
 }
 
 .rule-examples li {
-  background: white;
-  padding: 0.8rem;
-  border-radius: 10px;
-  margin-bottom: 0.5rem;
+  background: var(--bg-glass);
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 0.75rem;
   font-size: 1.1rem;
   color: var(--text-primary);
-  border-left: 4px solid var(--primary-light);
+  border-left: 4px solid var(--primary-color);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.rule-examples li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  background: var(--primary-light);
+  color: white;
 }
 
 .grammar-practice {

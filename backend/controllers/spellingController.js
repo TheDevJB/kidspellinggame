@@ -1,6 +1,5 @@
 const { pool } = require('../config/database');
 
-// Get all word families with their words
 exports.getWordFamilies = async (req, res) => {
   try {
     const [families] = await pool.execute(`
@@ -13,7 +12,6 @@ exports.getWordFamilies = async (req, res) => {
       ORDER BY wf.difficulty, wf.name
     `);
 
-    // Get words for each family
     for (let family of families) {
       const [words] = await pool.execute(
         'SELECT * FROM words WHERE family_id = ? ORDER BY word',
@@ -31,7 +29,7 @@ exports.getWordFamilies = async (req, res) => {
   }
 };
 
-// Get specific word family by ID
+//Get specific word family by ID
 exports.getWordFamily = async (req, res) => {
   try {
     const familyId = parseInt(req.params.id);
@@ -47,7 +45,6 @@ exports.getWordFamily = async (req, res) => {
 
     const family = families[0];
     
-    // Get words for this family
     const [words] = await pool.execute(
       'SELECT * FROM words WHERE family_id = ? ORDER BY word',
       [familyId]
@@ -64,7 +61,7 @@ exports.getWordFamily = async (req, res) => {
   }
 };
 
-// Get spelling words with optional filtering
+//Get spelling words with optional filtering
 exports.getSpellingWords = async (req, res) => {
   try {
     const { grade, family, difficulty } = req.query;
@@ -97,7 +94,6 @@ exports.getSpellingWords = async (req, res) => {
   }
 };
 
-// Get random word
 exports.getRandomWord = async (req, res) => {
   try {
     const { grade, family, difficulty } = req.query;
@@ -135,7 +131,6 @@ exports.getRandomWord = async (req, res) => {
   }
 };
 
-// Check spelling attempt
 exports.checkSpelling = async (req, res) => {
   try {
     const { wordId, userAnswer, userId } = req.body;
@@ -157,7 +152,6 @@ exports.checkSpelling = async (req, res) => {
     const word = words[0];
     const isCorrect = userAnswer.toLowerCase().trim() === word.word.toLowerCase();
 
-    // Simple response without user progress tracking for now
     res.json({
       correct: isCorrect,
       correctWord: word.word,
@@ -172,7 +166,6 @@ exports.checkSpelling = async (req, res) => {
   }
 };
 
-// Get user progress for spelling
 exports.getUserProgress = async (req, res) => {
   try {
     const userId = parseInt(req.params.userId);
@@ -209,7 +202,6 @@ exports.addWord = async (req, res) => {
       return res.status(400).json({ message: 'Word and family ID are required' });
     }
 
-    // Check if family exists
     const [families] = await pool.execute(
       'SELECT * FROM word_families WHERE id = ?',
       [familyId]
@@ -219,19 +211,16 @@ exports.addWord = async (req, res) => {
       return res.status(404).json({ message: 'Word family not found' });
     }
 
-    // Insert new word
     const [result] = await pool.execute(
       'INSERT INTO words (word, family_id, example_sentence) VALUES (?, ?, ?)',
       [word.toLowerCase(), familyId, exampleSentence || `Example sentence with ${word}.`]
     );
 
-    // Update total_words count in word_families
     await pool.execute(
       'UPDATE word_families SET total_words = (SELECT COUNT(*) FROM words WHERE family_id = ?) WHERE id = ?',
       [familyId, familyId]
     );
 
-    // Get the newly created word
     const [newWord] = await pool.execute(
       'SELECT w.*, wf.name as family_name FROM words w JOIN word_families wf ON w.family_id = wf.id WHERE w.id = ?',
       [result.insertId]
@@ -244,7 +233,6 @@ exports.addWord = async (req, res) => {
   }
 };
 
-// Get random word from specific family
 exports.getRandomWordFromFamily = async (req, res) => {
   try {
     const familyId = parseInt(req.params.familyId);
@@ -269,7 +257,6 @@ exports.getRandomWordFromFamily = async (req, res) => {
   }
 };
 
-// Get review sentences for a word family
 exports.getReviewSentences = async (req, res) => {
   try {
     const familyId = parseInt(req.params.familyId);
@@ -291,22 +278,19 @@ exports.getReviewSentences = async (req, res) => {
   }
 };
 
-// Mark family as completed
 exports.markFamilyCompleted = async (req, res) => {
   try {
     const familyId = parseInt(req.params.familyId);
     const { userId } = req.body;
     
-    // Update family completion status (you might want to track this per user)
     await pool.execute(
       'UPDATE word_families SET completed = 1 WHERE id = ?',
       [familyId]
     );
 
-    // If userId provided, you could track individual user completion
     if (userId) {
-      // This would require a user_family_progress table
-      // For now, we'll just acknowledge the completion
+      //This would require a user_family_progress table in my db
+      //For now I am just acknowledging the completion
       console.log(`User ${userId} completed family ${familyId}`);
     }
 

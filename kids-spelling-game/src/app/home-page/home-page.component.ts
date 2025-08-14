@@ -12,33 +12,19 @@ import { NavTabsComponent } from '../shared/nav-tabs/nav-tabs.component';
   imports: [RouterModule, CommonModule, NavTabsComponent],
   
   template: `
-    <!-- MAIN CONTAINER -->
-    <!-- Wraps all content with consistent styling -->
     <div class="container">
-      <!-- NAVIGATION TABS -->
-      <!-- Custom component for navigation between different sections -->
       <app-nav-tabs></app-nav-tabs>
       
-      <!-- WELCOME SECTION -->
-      <!-- Eye-catching header to greet users -->
       <div class="welcome-section" *ngIf="!selectedSubject">
-        <!-- DECORATIVE STARS -->
-        <!-- Visual elements to make the page more engaging for kids -->
         <div class="stars">
           <div class="star"></div>
           <div class="star"></div>
           <div class="star"></div>
         </div>
-        <!-- MAIN HEADING -->
-        <!-- Large, friendly title with emoji to appeal to children -->
         <h1>Welcome to Learning Adventures! 🌟</h1>
-        <!-- SUBTITLE -->
-        <!-- Encouraging message to set a positive tone -->
         <p class="subtitle">Choose your learning adventure and start having fun!</p>
       </div>
 
-      <!-- MAIN SUBJECT SELECTION -->
-      <!-- Show main subject areas when no subject is selected -->
       <div class="subject-selection" *ngIf="!selectedSubject">
         <h2>What would you like to learn today? 📚</h2>
         <div class="subjects-grid">
@@ -47,7 +33,7 @@ import { NavTabsComponent } from '../shared/nav-tabs/nav-tabs.component';
           <div class="subject-card" (click)="selectSubject('spelling')">
             <div class="subject-icon">✏️</div>
             <h3>Spelling Adventure</h3>
-            <p>Learn words, sentences, colors, and grammar!</p>
+            <p>Learn words, sentences, grammer, and color!</p>
             <ul class="subject-features">
               <li>🔤 Word Families</li>
               <li>📝 Sentence Building</li>
@@ -57,7 +43,6 @@ import { NavTabsComponent } from '../shared/nav-tabs/nav-tabs.component';
             <div class="enter-button">Enter Adventure!</div>
           </div>
 
-          <!-- MATH ADVENTURE -->
           <div class="subject-card coming-soon">
             <div class="subject-icon">🔢</div>
             <h3>Math Adventure</h3>
@@ -73,8 +58,6 @@ import { NavTabsComponent } from '../shared/nav-tabs/nav-tabs.component';
         </div>
       </div>
 
-      <!-- SPELLING ACTIVITIES SECTION -->
-      <!-- Show spelling activities when spelling is selected -->
       <div class="activities-section" *ngIf="selectedSubject === 'spelling'">
         <div class="section-header">
           <h2>Spelling Adventure Activities 🎯</h2>
@@ -87,22 +70,17 @@ import { NavTabsComponent } from '../shared/nav-tabs/nav-tabs.component';
           <!-- CHARACTER EMOJI -->
           <!-- Visual representation of a friendly guide -->
           <div class="character">🦊</div>
-          <!-- SPEECH BUBBLE -->
-          <!-- Welcoming message from the mascot -->
           <div class="speech-bubble">
-            Great choice! Pick any spelling activity to start learning and having fun!
+            Welcome to the Spelling game section! Pick any spelling activity to start learning and having fun!
           </div>
         </div>
 
-        <!-- ACTIVITIES GRID -->
-        <!-- Main content area showing available spelling activities -->
         <div class="activities-grid">
           
-          <!-- WORD FAMILIES ACTIVITY -->
           <div class="activity-card">
             <div class="activity-icon">⭐</div>
             <h3>Word Families</h3>
-            <p>Learn to spell words that rhyme and sound alike!</p>
+            <p>Learn to spell words that sound alike!</p>
             <ul class="features">
               <li>🎯 Practice spelling</li>
               <li>⭐ Word patterns</li>
@@ -111,7 +89,6 @@ import { NavTabsComponent } from '../shared/nav-tabs/nav-tabs.component';
             <button class="play-button" (click)="startWordFamilies()">Start Word Families!</button>
           </div>
 
-          <!-- SENTENCE BUILDING ACTIVITY -->
           <div class="activity-card">
             <div class="activity-icon">📝</div>
             <h3>Sentence Building</h3>
@@ -152,8 +129,6 @@ import { NavTabsComponent } from '../shared/nav-tabs/nav-tabs.component';
             <button class="play-button" (click)="startColorLearning()">Start Colors!</button>
           </div>
 
-      <!-- MOTIVATION SECTION -->
-      <!-- Encouraging message to inspire learning -->
       <div class="motivation" *ngIf="selectedSubject">
         <p>"Every word you learn makes you smarter! Let's play and learn together! 🌈"</p>
       </div>
@@ -197,16 +172,16 @@ export class HomePageComponent implements OnInit {
 
   startSentenceBuilding(): void {
     console.log('Starting sentence building');
-    this.router.navigate(['/sentences', 'kindergarten']);
+    this.router.navigate(['/sentences']);
   }
 
   startColorLearning(): void {
     console.log('Starting color learning');
-    this.router.navigate(['/colors', 'pre-k']);
+    this.router.navigate(['/colors']);
   }
 
   startCapitalization(): void {
     console.log('Starting capitalization');
-    this.router.navigate(['/capitalization', 'kindergarten']);
+    this.router.navigate(['/capitalization']);
   }
 }

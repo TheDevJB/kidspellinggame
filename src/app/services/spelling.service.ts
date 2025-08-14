@@ -37,24 +37,18 @@ export class SpellingService {
 
   constructor(private http: HttpClient) {}
 
-  // Get all word families from database
   getWordFamilies(): Observable<WordFamily[]> {
     return this.http.get<WordFamily[]>(`${this.apiUrl}/families`);
   }
 
-  // Get specific word family from database
   getWordFamily(familyId: number): Observable<WordFamily> {
     return this.http.get<WordFamily>(`${this.apiUrl}/families/${familyId}`);
   }
 
-  // Get random word from database
   getRandomWord(familyIdOrDifficulty?: number | string, family?: string): Observable<Word> {
-    // Handle both old signature (difficulty, family) and new signature (familyId)
     if (typeof familyIdOrDifficulty === 'number') {
-      // New signature: getRandomWord(familyId)
       return this.http.get<Word>(`${this.apiUrl}/families/${familyIdOrDifficulty}/random-word`);
     } else {
-      // Old signature: getRandomWord(difficulty?, family?)
       let params = '';
       if (familyIdOrDifficulty || family) {
         const queryParams = [];
@@ -66,7 +60,6 @@ export class SpellingService {
     }
   }
 
-  // Check spelling attempt
   checkSpelling(wordId: number, userAnswer: string, userId?: number): Observable<any> {
     return this.http.post(`${this.apiUrl}/check`, {
       wordId,
@@ -75,24 +68,20 @@ export class SpellingService {
     });
   }
 
-  // Get review sentences for a word family
   getReviewSentences(familyId: number): Observable<string[]> {
     return this.http.get<string[]>(`${this.apiUrl}/families/${familyId}/sentences`);
   }
 
-  // Mark family as completed
   markFamilyCompleted(familyId: number, userId?: number): Observable<any> {
     return this.http.post(`${this.apiUrl}/families/${familyId}/complete`, {
       userId: userId || 1 // Default user ID for now
     });
   }
 
-  // Get user progress
   getUserProgress(userId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/progress/${userId}`);
   }
 
-  // Add new word
   addWord(word: string, familyId: number, exampleSentence: string): Observable<Word> {
     return this.http.post<Word>(`${this.apiUrl}/add`, {
       word,
@@ -101,7 +90,6 @@ export class SpellingService {
     });
   }
 
-  // Local state management methods (keep these for compatibility)
   setCurrentFamily(family: WordFamily): void {
     this.currentFamilySubject.next(family);
     this.currentWordIndexSubject.next(0);

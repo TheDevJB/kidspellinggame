@@ -20,17 +20,17 @@ async function testConnection() {
   try {
     // Test basic connection
     const connection = await mysql.createConnection(config);
-    console.log('✅ Successfully connected to MySQL server!');
+    console.log('Successfully connected to MySQL server!');
     
     // Test database access
     const dbName = process.env.DB_NAME || 'kids_spelling_game';
     try {
       await connection.execute(`USE ${dbName}`);
-      console.log(`✅ Successfully accessed database: ${dbName}`);
+      console.log(`Successfully accessed database: ${dbName}`);
       
       // Test table access
       const [tables] = await connection.execute('SHOW TABLES');
-      console.log(`✅ Found ${tables.length} tables in database`);
+      console.log(`Found ${tables.length} tables in database`);
       
       if (tables.length > 0) {
         console.log('Tables:');
@@ -40,16 +40,16 @@ async function testConnection() {
       }
       
     } catch (dbError) {
-      console.log(`⚠️  Database '${dbName}' not found or not accessible`);
-      console.log('💡 Run "npm run setup" to create the database and tables');
+      console.log(`Database '${dbName}' not found or not accessible`);
+      console.log('Run "npm run setup" to create the database and tables');
     }
     
     await connection.end();
-    console.log('\n🎉 Connection test completed successfully!');
+    console.log('\nConnection test completed successfully!');
     
   } catch (error) {
-    console.error('❌ Connection failed:', error.message);
-    console.log('\n🔧 Troubleshooting tips:');
+    console.error('Connection failed:', error.message);
+    console.log('\n Troubleshooting tips:');
     console.log('1. Make sure MySQL is running');
     console.log('2. Check your .env file credentials');
     console.log('3. Verify the user has proper permissions');

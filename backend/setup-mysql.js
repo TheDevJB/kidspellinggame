@@ -15,14 +15,13 @@ async function setupDatabase() {
 
     console.log('Connected to MySQL server');
 
-    // Create database if it doesn't exist
+    //Creating a database if it doesn't exist
     const dbName = process.env.DB_NAME || 'kids_spelling_game';
     await connection.execute(`CREATE DATABASE IF NOT EXISTS ${dbName}`);
     console.log(`Database '${dbName}' created or already exists`);
 
     await connection.end();
 
-    // Now use the database functions to set up tables
     const { testConnection, initializeDatabase, seedDatabase } = require('./config/database');
 
     console.log('\nSetting up database tables...');

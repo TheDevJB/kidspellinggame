@@ -53,15 +53,7 @@ exports.checkWordOrder = (req, res) => {
         const isCorrect = userSentenceString === activity.correctSentence;
         
         const basePoints = 20;
-        const gradeMultiplier = {
-            'kindergarten': 1,
-            '1st': 1.2,
-            '2nd': 1.4,
-            '3rd': 1.6,
-            '4th': 1.8,
-            '5th': 2.0
-        };
-        const points = isCorrect ? Math.round(basePoints * (gradeMultiplier[activity.grade] || 1)) : 0;
+        const points = isCorrect ? Math.round(basePoints) : 0;
         
         let feedback = {
             correct: isCorrect,
@@ -139,15 +131,7 @@ exports.checkFillBlank = (req, res) => {
         const isCorrect = selectedWord === activity.correct;
         
         const basePoints = 15;
-        const gradeMultiplier = {
-            'kindergarten': 1,
-            '1st': 1.2,
-            '2nd': 1.4,
-            '3rd': 1.6,
-            '4th': 1.8,
-            '5th': 2.0
-        };
-        const points = isCorrect ? Math.round(basePoints * (gradeMultiplier[activity.grade] || 1)) : 0;
+        const points = isCorrect ? Math.round(basePoints) : 0;
         
         const completedSentence = activity.sentence.replace('_____', selectedWord);
         const correctSentence = activity.sentence.replace('_____', activity.correct);
@@ -220,15 +204,7 @@ exports.checkCapitalization = (req, res) => {
         const isCorrect = userSentence === activity.correctSentence;
         
         const basePoints = 25;
-        const gradeMultiplier = {
-            'kindergarten': 1,
-            '1st': 1.2,
-            '2nd': 1.4,
-            '3rd': 1.6,
-            '4th': 1.8,
-            '5th': 2.0
-        };
-        const points = isCorrect ? Math.round(basePoints * (gradeMultiplier[activity.grade] || 1)) : 0;
+        const points = isCorrect ? Math.round(basePoints) : 0;
         
         let errorAnalysis = [];
         if (!isCorrect) {

@@ -1,6 +1,3 @@
-// Word families data for easy management
-// You can add new word families here and they'll be automatically imported
-
 const wordFamiliesData = [
   {
     name: 'AT',
@@ -121,7 +118,6 @@ const wordFamiliesData = [
       { word: 'fight', example_sentence: 'The knights would fight with swords.' }
     ]
   },
-  // Add more word families here!
   {
     name: 'ALL',
     description: 'Words ending with -all sound',

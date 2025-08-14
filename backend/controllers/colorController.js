@@ -90,7 +90,7 @@ exports.colorIdentification = (req, res) => {
             points: points,
             message: isCorrect ? 
                 `Great job! You found ${correctColor.name}! 🌈` : 
-                `Good try! That's ${selectedColor}, but we were looking for ${correctColor.name}. Keep going! 💪`,
+                `Good try! That's ${selectedColor}, but we were looking for ${correctColor.name}. Try again! You got this!`,
             encouragement: isCorrect ? 
                 ['Awesome!', 'Perfect!', 'You\'re amazing!', 'Fantastic!'][Math.floor(Math.random() * 4)] :
                 ['Try again!', 'You can do it!', 'Keep learning!', 'Almost there!'][Math.floor(Math.random() * 4)]
@@ -151,12 +151,11 @@ exports.colorMixing = (req, res) => {
         if (!mixingRule) {
             return res.json({
                 success: false,
-                message: `Hmm, ${color1} and ${color2} don't make a new color in this lesson. Try different colors! 🎨`,
+                message: `Hmm, ${color1} and ${color2} make a totally different color in this lesson. Try different colors! 🎨`,
                 color1: color1,
                 color2: color2,
                 result: null,
                 points: 0,
-                hint: 'Try mixing primary colors like red, blue, and yellow!'
             });
         }
         
