@@ -1,26 +1,21 @@
-# 🎯 Kids Spelling Game soon Math
+# 🎯 Kids Spelling Game Math coming soon
 
 An interactive educational web application I developed to help children learn spelling through engaging word family exercises. I am stoked at what I created and the time spent.
 
-![Kids Spelling Game](https://img.shields.io/badge/Angular-17+-red?style=for-the-badge&logo=angular)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue?style=for-the-badge&logo=typescript)
-![Responsive](https://img.shields.io/badge/Design-Responsive-green?style=for-the-badge)
-![Theme](https://img.shields.io/badge/Theme-Light%2FDark-purple?style=for-the-badge)
-
 ## 📖 **About the Project**
 
-Exciting educational spelling game that helps children ages 3-9 learn colors & spelling patterns through **word families**.
+Exciting educational spelling game that helps children learn colors & spelling patterns through different types of spelling patterns.
 
-### 🎓 **Educational Value**
+### **Educational Value**
 - **Word & Sentencing Based Learning**: Focuses on word families and sentences to build spelling confidence
 - **Progressive Difficulty**: Words ranging from easy to medium difficulty
 - **Immediate Feedback**: Encouring messages whether wrong or right
 - **Memory Reinforcement**: 4-second word display followed by spelling practice
 - **Sentence Context**: Each word includes example sentences for comprehension
 
-## ✨ **Key Features**
+## **Key Features**
 
-### 🎮 **Core Gameplay**
+### **Core Gameplay**
 - **Word Family Selection**: Choose from multiple spelling learning techniques
 - **Interactive Spelling**: Type words after they disappear from screen
 - **Progress Tracking**: Visual indicators for completed and in-progress families
@@ -57,18 +52,7 @@ Exciting educational spelling game that helps children ages 3-9 learn colors & s
    ```
    http://localhost:4200
 
-
-## 🎯 **Word Families Included**
-
-| Family | Pattern | Example Words | Difficulty |
-|--------|---------|---------------|------------|
-| **AT** | _at | cat, bat, hat, mat, rat, fat, sat, pat | Easy |
-| **AN** | _an | can, man, pan, ran, fan, tan, van, plan | Easy |
-| **ING** | _ing | sing, ring, king, wing, bring, thing, spring, swing | Medium |
-| **OP** | _op | top, hop, pop, stop, shop, drop, mop, chop | Easy |
-+ MORE
-
-## 🛠️ **Technical Implementation**
+## 🛠**Technical Implementation**
 
 ### **Frontend Architecture**
 - **Angular 17+** with standalone components
@@ -77,7 +61,7 @@ Exciting educational spelling game that helps children ages 3-9 learn colors & s
 - **Modular Design** with reusable components
 - **State Management** through services and BehaviorSubjects
 
-## 🔮 **Scalability Features**
+## **Scalability Features**
 
 ### **Backend Ready**
 I have a scalable backend architecture designed for production use:
@@ -88,7 +72,7 @@ I have a scalable backend architecture designed for production use:
 - **Progress Analytics** for teachers and parents
 - **Session Tracking** for detailed learning insights
 
-## 🎓 **Educational Impact**
+## **Educational Impact**
 
 ### **Learning Outcomes**
 - **Phonemic Awareness**: Understanding sound-letter relationships
