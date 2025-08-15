@@ -33,8 +33,8 @@ interface SentenceActivity {
       </button>
 
       <div class="header-section">
-        <h1>Sentence Building</h1>
-        <p class="subtitle">Learn to build perfect sentences!</p>
+        <h1>{{getPageTitle()}}</h1>
+        <p class="subtitle">{{getPageSubtitle()}}</p>
       </div>
 
       <div class="activity-selection" *ngIf="!selectedActivity">
@@ -204,12 +204,12 @@ interface SentenceActivity {
           <div class="grammar-lesson">
             <h3>Grammar Rule:</h3>
             <div class="rule-explanation">
-              {{currentGrammarRule?.explanation}}
+              {{currentGrammarRule?.explanation || 'Always start a sentence with a capital letter.'}}
             </div>
             <div class="rule-examples">
               <h4>Examples:</h4>
               <ul>
-                <li *ngFor="let example of currentGrammarRule?.examples">{{example}}</li>
+                <li *ngFor="let example of currentGrammarRule?.examples || ['The dog runs fast.', 'My name is Sarah.', 'We go to school.']">{{example}}</li>
               </ul>
             </div>
           </div>
@@ -217,14 +217,14 @@ interface SentenceActivity {
           <div class="grammar-practice">
             <h3>Practice:</h3>
             <div class="grammar-question">
-              {{currentGrammarQuestion?.question}}
+              {{currentGrammarQuestion?.question || 'Which sentence starts correctly?'}}
             </div>
             <div class="grammar-options">
-              <button *ngFor="let option of currentGrammarQuestion?.options; let i = index"
+              <button *ngFor="let option of (currentGrammarQuestion?.options || ['the dog is sleeping', 'The dog is sleeping', 'THE dog is sleeping']); let i = index"
                       class="grammar-option"
                       [class.selected]="selectedGrammarOption === i"
-                      [class.correct]="showGrammarResult && i === currentGrammarQuestion?.correctAnswer"
-                      [class.incorrect]="showGrammarResult && selectedGrammarOption === i && i !== currentGrammarQuestion?.correctAnswer"
+                      [class.correct]="showGrammarResult && i === (currentGrammarQuestion?.correctAnswer || 1)"
+                      [class.incorrect]="showGrammarResult && selectedGrammarOption === i && i !== (currentGrammarQuestion?.correctAnswer || 1)"
                       (click)="selectGrammarOption(i)"
                       [disabled]="showGrammarResult">
                 {{option}}
@@ -264,7 +264,7 @@ interface SentenceActivity {
   styleUrls: ['./sentence-building.component.css']
 })
 
-export class SentenceBuildingComponent {
+export class SentenceBuildingComponent implements OnInit {
   
   gradeLevel: string = '';
   selectedActivity: string | null = null;
@@ -291,6 +291,38 @@ export class SentenceBuildingComponent {
   isGrammarCorrect: boolean = false;
   grammarResultMessage: string = '';
   grammarScore: number = 0;
+
+  constructor(private router: Router, private route: ActivatedRoute, private http: HttpClient) {}
+
+  ngOnInit(): void {
+    this.gradeLevel = 'all-ages';
+    
+    const url = this.router.url;
+    if (url.includes('/capitalization')) {
+      this.selectedActivity = 'grammar';
+      this.startGrammarGame();
+    }
+  }
+
+  goBack(): void {
+    this.router.navigate(['/home'], { queryParams: { subject: 'spelling' } });
+  }
+
+  getPageTitle(): string {
+    const url = this.router.url;
+    if (url.includes('/capitalization')) {
+      return 'Capitalization Rules';
+    }
+    return 'Sentence Building';
+  }
+
+  getPageSubtitle(): string {
+    const url = this.router.url;
+    if (url.includes('/capitalization')) {
+      return 'Learn when to use capital letters!';
+    }
+    return 'Learn to build perfect sentences!';
+  }
   //TODO: Figure a new way to implement sentence building
   sentences: SentenceActivity[] = [
     {
@@ -357,16 +389,6 @@ export class SentenceBuildingComponent {
       correctAnswer: 1
     }
   ];
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private http: HttpClient
-  ) {}
-
-  goBack(): void {
-    this.router.navigate(['/home']);
-  }
 
   backToActivities(): void {
     this.selectedActivity = null;
@@ -524,20 +546,27 @@ export class SentenceBuildingComponent {
   }
 
   startGrammarGame(): void {
+    console.log('Starting grammar game');
     this.loadGrammarRule();
     this.nextGrammar();
+    console.log('Current grammar rule:', this.currentGrammarRule);
+    console.log('Current grammar question:', this.currentGrammarQuestion);
   }
 
   loadGrammarRule(): void {
-    this.currentGrammarRule = this.grammarRules.length > 0 
-      ? this.grammarRules[Math.floor(Math.random() * this.grammarRules.length)]
-      : this.grammarRules[0];
+    if (this.grammarRules.length > 0) {
+      this.currentGrammarRule = this.grammarRules[Math.floor(Math.random() * this.grammarRules.length)];
+    } else {
+      this.currentGrammarRule = null;
+    }
   }
 
   nextGrammar(): void {
-    this.currentGrammarQuestion = this.grammarQuestions.length > 0
-      ? this.grammarQuestions[Math.floor(Math.random() * this.grammarQuestions.length)]
-      : this.grammarQuestions[0];
+    if (this.grammarQuestions.length > 0) {
+      this.currentGrammarQuestion = this.grammarQuestions[Math.floor(Math.random() * this.grammarQuestions.length)];
+    } else {
+      this.currentGrammarQuestion = null;
+    }
     
     this.selectedGrammarOption = null;
     this.showGrammarResult = false;
@@ -551,7 +580,8 @@ export class SentenceBuildingComponent {
   checkGrammar(): void {
     if (this.selectedGrammarOption === null) return;
     
-    this.isGrammarCorrect = this.selectedGrammarOption === this.currentGrammarQuestion?.correctAnswer;
+    const correctAnswer = this.currentGrammarQuestion?.correctAnswer || 1;
+    this.isGrammarCorrect = this.selectedGrammarOption === correctAnswer;
     this.showGrammarResult = true;
     
     if (this.isGrammarCorrect) {

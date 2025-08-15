@@ -12,7 +12,7 @@ html, body {
   --primary-gradient: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
   --primary-light: #3a7bd5;
   --primary-dark: #0052a3;
-  --secondary-gradient: linear-gradient(135deg, #00f260 0%, #0575e6 100%);
+  --secondary-gradient: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
   --accent-color: #ffd166;
   --bg-gradient: linear-gradient(135deg, #e6f7ff 0%, #f0fff4 100%);
   --bg-glass: rgba(255, 255, 255, 0.75);
@@ -22,7 +22,7 @@ html, body {
   --text-light: #4a5568;
   --text-accent: #ff6b6b;
   --button-gradient: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
-  --button-hover: linear-gradient(135deg, #0072ff 0%, #00c6ff 100%);
+  --button-hover: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
   --success-color: #22c55e;
   --error-color: #ef4444;
   --theme-toggle-bg: rgba(255, 255, 255, 0.95);
@@ -42,7 +42,7 @@ html, body {
   --primary-gradient: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
   --primary-light: #22d3ee;
   --primary-dark: #0ea5e9;
-  --secondary-gradient: linear-gradient(135deg, #00f260 0%, #06b6d4 100%);
+  --secondary-gradient: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
   --accent-color: #ffd166;
   --bg-gradient: radial-gradient(1200px 600px at 20% 10%, rgba(56, 189, 248, 0.15) 0%, rgba(0,0,0,0) 60%), radial-gradient(1000px 500px at 80% 20%, rgba(34, 197, 94, 0.12) 0%, rgba(0,0,0,0) 60%), linear-gradient(180deg, #0b1020 0%, #0a0f1a 40%, #0a0f1a 100%);
   --bg-glass: rgba(255, 255, 255, 0.06);
@@ -52,7 +52,7 @@ html, body {
   --text-light: #a0aec0;
   --text-accent: #ff6b6b;
   --button-gradient: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
-  --button-hover: linear-gradient(135deg, #00f260 0%, #0575e6 100%);
+  --button-hover: linear-gradient(135deg, #22d3ee 0%, #00d2ff 100%);
   --success-color: #22c55e;
   --error-color: #ef4444;
   --theme-toggle-bg: rgba(255, 255, 255, 0.08);

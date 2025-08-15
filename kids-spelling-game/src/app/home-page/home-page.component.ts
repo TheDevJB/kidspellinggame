@@ -113,11 +113,9 @@ import { NavTabsComponent } from '../shared/nav-tabs/nav-tabs.component';
             </ul>
             <button class="play-button" (click)="startCapitalization()">Learn Capitals!</button>
           </div>
-        </div>
-      </div>
 
-      <!-- COLOR LEARNING ACTIVITY -->
-      <div class="activity-card">
+          <!-- COLOR LEARNING ACTIVITY -->
+          <div class="activity-card">
             <div class="activity-icon">🎨</div>
             <h3>Color Learning</h3>
             <p>Learn colors, color mixing, and identification!</p>
@@ -128,6 +126,8 @@ import { NavTabsComponent } from '../shared/nav-tabs/nav-tabs.component';
             </ul>
             <button class="play-button" (click)="startColorLearning()">Start Colors!</button>
           </div>
+        </div>
+      </div>
 
       <div class="motivation" *ngIf="selectedSubject">
         <p>"Every word you learn makes you smarter! Let's play and learn together! 🌈"</p>

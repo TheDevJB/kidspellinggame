@@ -11,11 +11,11 @@ export const routes: Routes = [
   
   { path: 'home', component: HomePageComponent },
   
-  { path: 'colors/:grade', component: ColorLearningComponent },
+  { path: 'colors', component: ColorLearningComponent },
   
-  { path: 'sentences/:grade', component: SentenceBuildingComponent },
+  { path: 'sentences', component: SentenceBuildingComponent },
   
-  { path: 'capitalization/:grade', component: SentenceBuildingComponent },
+  { path: 'capitalization', component: SentenceBuildingComponent },
   
   { path: 'families', component: WordFamilySelectionComponent },
   

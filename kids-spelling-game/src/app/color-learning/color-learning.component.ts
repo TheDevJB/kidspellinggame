@@ -39,7 +39,7 @@ interface ColorLesson {
 
       <!-- HEADER SECTION -->
       <div class="header-section">
-        <h1>🎨 Color Learning for {{gradeLevel | titlecase}}</h1>
+        <h1>🎨 Color Learning Adventure</h1>
         <p class="subtitle">Let's explore the wonderful world of colors!</p>
       </div>
 
@@ -300,13 +300,40 @@ export class ColorLearningComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.gradeLevel = params['grade'] || 'pre-k';
-    });
+    this.gradeLevel = 'all-ages';
+    this.loadColorData();
   }
 
   goBack(): void {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/home'], { queryParams: { subject: 'spelling' } });
+  }
+
+  loadColorData(): void {
+    this.loadColors();
+    this.nextColor();
+    this.generateMixingChallenge();
+    this.generateChallengeQuestion();
+  }
+
+  loadColors(): void {
+    // Colors are already loaded in the class property above
+    // Initialize the color options for the identification game
+    this.colorOptions = [...this.colors];
+  }
+
+  generateMixingChallenge(): void {
+    const mixingCombos = [
+      { color1: '#FF0000', color2: '#FFFF00', result: '#FFA500', resultName: 'Orange' },
+      { color1: '#0000FF', color2: '#FFFF00', result: '#00FF00', resultName: 'Green' },
+      { color1: '#FF0000', color2: '#0000FF', result: '#800080', resultName: 'Purple' },
+      { color1: '#FF0000', color2: '#FFFFFF', result: '#FFC0CB', resultName: 'Pink' },
+      { color1: '#000000', color2: '#FFFFFF', result: '#808080', resultName: 'Gray' }
+    ];
+    
+    this.mixingChallenge = mixingCombos[Math.floor(Math.random() * mixingCombos.length)];
+    this.mixingChoices = this.colors.filter(color => 
+      ['Orange', 'Green', 'Purple', 'Pink', 'Brown'].includes(color.name)
+    );
   }
 
   backToLessons(): void {

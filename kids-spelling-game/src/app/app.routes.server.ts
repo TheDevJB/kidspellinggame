@@ -18,15 +18,15 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Client
   },
   {
-    path: 'colors/:grade',
+    path: 'colors',
     renderMode: RenderMode.Client
   },
   {
-    path: 'sentences/:grade',
+    path: 'sentences',
     renderMode: RenderMode.Client
   },
   {
-    path: 'capitalization/:grade',
+    path: 'capitalization',
     renderMode: RenderMode.Client
   },
   {
