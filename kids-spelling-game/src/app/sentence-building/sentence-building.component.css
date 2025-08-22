@@ -433,6 +433,30 @@
     0 0 10px rgba(34, 211, 238, 0.2);
 }
 
+:root[data-theme="dark"] .blank-select option {
+  background: #1a202c !important;
+  background-color: #1a202c !important;
+  color: #f8fafc !important;
+  border: none !important;
+  padding: 0.8rem 1rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+:root[data-theme="dark"] .blank-select option:hover {
+  background: #2d3748 !important;
+  background-color: #2d3748 !important;
+  color: #22d3ee !important;
+}
+
+:root[data-theme="dark"] .blank-select option:checked,
+:root[data-theme="dark"] .blank-select option:selected {
+  background: #22d3ee !important;
+  background-color: #22d3ee !important;
+  color: #1a202c !important;
+  font-weight: 700;
+}
+
 .blank-select:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
@@ -463,77 +487,6 @@
     0 6px 25px rgba(0, 0, 0, 0.5),
     0 0 20px rgba(34, 197, 94, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-
-.blank-select option {
-  background: var(--bg-card) !important;
-  color: var(--text-primary) !important;
-  padding: 0.8rem 1rem;
-  font-weight: 600;
-  border: none;
-  font-size: 1.1rem;
-}
-
-:root[data-theme="dark"] .blank-select option {
-  background: #1a202c !important;
-  background-color: #1a202c !important;
-  color: #f8fafc !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-:root[data-theme="dark"] .blank-select option:hover {
-  background: linear-gradient(145deg, #2d3748, #4a5568);
-  color: #22d3ee;
-}
-
-:root[data-theme="dark"] .blank-select option:checked,
-:root[data-theme="dark"] .blank-select option:selected {
-  background: linear-gradient(145deg, #22d3ee, #0ea5e9);
-  color: #1a202c;
-  font-weight: 700;
-}
-
-/* Enhanced dropdown styling for better browser support */
-.blank-select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-
-:root[data-theme="dark"] .blank-select {
-  /* Dark theme styling */
-  background-color: rgba(26, 32, 44, 0.95);
-}
-
-/* Firefox specific dark theme styling */
-@-moz-document url-prefix() {
-  :root[data-theme="dark"] .blank-select {
-    background-color: #1a202c;
-    color: #f8fafc;
-  }
-  
-  :root[data-theme="dark"] .blank-select option {
-    background-color: #1a202c;
-    color: #f8fafc;
-  }
-}
-
-/* Safari and Webkit specific */
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-  :root[data-theme="dark"] .blank-select {
-    background-color: rgba(26, 32, 44, 0.95);
-  }
-}
-
-/* Additional dark theme enhancement for better visibility */
-:root[data-theme="dark"] .sentence-with-blanks .blank-select {
-  border: 2px solid rgba(34, 211, 238, 0.4);
-  background: rgba(26, 32, 44, 0.95);
-  backdrop-filter: blur(20px);
-  box-shadow: 
-    0 4px 20px rgba(0, 0, 0, 0.6),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 0 10px rgba(34, 211, 238, 0.2);
 }
 
 .hint-area {

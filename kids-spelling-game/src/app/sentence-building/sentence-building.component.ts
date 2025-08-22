@@ -323,7 +323,7 @@ export class SentenceBuildingComponent implements OnInit {
     }
     return 'Learn to build perfect sentences!';
   }
-  //TODO: Figure a new way to implement sentence building
+  //TODO: Get rid of hardcoded sentences and store into my DB
   sentences: SentenceActivity[] = [
     {
       id: 1,
