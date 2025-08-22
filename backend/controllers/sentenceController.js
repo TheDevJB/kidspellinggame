@@ -152,8 +152,7 @@ exports.checkFillBlank = (req, res) => {
             feedback.encouragement = [
                 'You have great grammar skills!',
                 'Perfect word choice!',
-                'You understand sentences well!',
-                'Fantastic thinking!'
+                'You understand sentences well'
             ][Math.floor(Math.random() * 4)];
         } else {
             feedback.message = `Good try! The correct word is "${activity.correct}".`;

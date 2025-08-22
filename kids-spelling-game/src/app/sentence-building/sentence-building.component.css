@@ -1,6 +1,3 @@
-/* SENTENCE BUILDING COMPONENT STYLES
-   Educational, engaging styles for sentence building activities */
-
 /* MAIN CONTAINER */
 .container {
   max-width: 1200px;
@@ -504,9 +501,8 @@
 }
 
 :root[data-theme="dark"] .blank-select {
-  /* Webkit browsers specific styling for dark theme */
-  -webkit-background-color: rgba(26, 32, 44, 0.95);
-  -moz-background-color: rgba(26, 32, 44, 0.95);
+  /* Dark theme styling */
+  background-color: rgba(26, 32, 44, 0.95);
 }
 
 /* Firefox specific dark theme styling */

@@ -541,7 +541,7 @@ export class SentenceBuildingComponent implements OnInit {
       this.fillScore += 10;
       this.fillResultMessage = '🎉 Excellent! All blanks are correct!';
     } else {
-      this.fillResultMessage = '💪 Some blanks need fixing. Try again!';
+      this.fillResultMessage = 'Some blanks need fixing. Try again!';
     }
   }
 
