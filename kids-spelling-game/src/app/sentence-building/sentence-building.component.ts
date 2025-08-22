@@ -475,7 +475,7 @@ export class SentenceBuildingComponent implements OnInit {
   }
 
   checkWordOrder(): void {
-    if (!this.currentSentence) return;
+    if (!this.currentSentence || this.showResult) return;
     
     const userSentence = this.selectedWords.join(' ');
     const correctSentence = this.currentSentence.correctOrder?.join(' ') || '';
@@ -533,13 +533,15 @@ export class SentenceBuildingComponent implements OnInit {
   }
 
   checkFillBlanks(): void {
+    if (this.showFillResult) return;
+    
     const blanks = this.sentenceParts.filter(part => part.type === 'blank');
     this.isFillCorrect = blanks.every(blank => blank.selected === blank.correct);
     this.showFillResult = true;
     
     if (this.isFillCorrect) {
       this.fillScore += 10;
-      this.fillResultMessage = '🎉 Excellent! All blanks are correct!';
+      this.fillResultMessage = '🎉 Excellent! The fill in is correct!';
     } else {
       this.fillResultMessage = 'Some blanks need fixing. Try again!';
     }
@@ -578,7 +580,7 @@ export class SentenceBuildingComponent implements OnInit {
   }
 
   checkGrammar(): void {
-    if (this.selectedGrammarOption === null) return;
+    if (this.selectedGrammarOption === null || this.showGrammarResult) return;
     
     const correctAnswer = this.currentGrammarQuestion?.correctAnswer || 1;
     this.isGrammarCorrect = this.selectedGrammarOption === correctAnswer;
@@ -588,7 +590,7 @@ export class SentenceBuildingComponent implements OnInit {
       this.grammarScore += 10;
       this.grammarResultMessage = '🎉 Correct! You know your grammar!';
     } else {
-      this.grammarResultMessage = '💪 Keep practicing! You\'ll get it!';
+      this.grammarResultMessage = 'Keep practicing! You\'ll get it!';
     }
   }
 } 

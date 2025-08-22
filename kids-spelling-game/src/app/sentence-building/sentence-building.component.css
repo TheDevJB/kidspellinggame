@@ -404,12 +404,12 @@
 }
 
 .blank-select {
-  background: var(--bg-card) !important;
-  border: 2px solid var(--primary-light) !important;
+  background: #1a202c !important;
+  border: 2px solid #22d3ee !important;
   border-radius: 12px;
   padding: 0.7rem 1.2rem;
   font-size: 1.2rem;
-  color: var(--text-primary) !important;
+  color: #f8fafc !important;
   margin: 0 0.3rem;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -417,23 +417,16 @@
   min-width: 140px;
   text-align: center;
   backdrop-filter: blur(15px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 10px rgba(34, 211, 238, 0.2);
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
 }
 
-:root[data-theme="dark"] .blank-select {
-  background: #1a202c !important;
-  border: 2px solid #22d3ee !important;
-  color: #f8fafc !important;
-  box-shadow: 
-    0 4px 15px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 0 10px rgba(34, 211, 238, 0.2);
-}
-
-:root[data-theme="dark"] .blank-select option {
+.blank-select option {
   background: #1a202c !important;
   background-color: #1a202c !important;
   color: #f8fafc !important;
@@ -443,14 +436,14 @@
   font-size: 1.1rem;
 }
 
-:root[data-theme="dark"] .blank-select option:hover {
+.blank-select option:hover {
   background: #2d3748 !important;
   background-color: #2d3748 !important;
   color: #22d3ee !important;
 }
 
-:root[data-theme="dark"] .blank-select option:checked,
-:root[data-theme="dark"] .blank-select option:selected {
+.blank-select option:checked,
+.blank-select option:selected {
   background: #22d3ee !important;
   background-color: #22d3ee !important;
   color: #1a202c !important;

@@ -316,8 +316,8 @@ export class ColorLearningComponent implements OnInit {
   }
 
   loadColors(): void {
-    // Colors are already loaded in the class property above
-    // Initialize the color options for the identification game
+    //Colors are already loaded in the class property above
+    //Initialize the color options for the identification game
     this.colorOptions = [...this.colors];
   }
 
@@ -453,7 +453,7 @@ export class ColorLearningComponent implements OnInit {
   }
 
   checkMixing(): void {
-    if (!this.selectedMixResult) return;
+    if (!this.selectedMixResult || this.showMixResult) return;
     
     const selectedChoice = this.mixingChoices.find(c => c.id === this.selectedMixResult);
     this.mixedResult = selectedChoice?.hex || '';
@@ -521,7 +521,7 @@ export class ColorLearningComponent implements OnInit {
         this.challengeLevel++;
       }, 2000);
     } else {
-      this.challengeResultMessage = '💪 Keep trying! You can do it!';
+      this.challengeResultMessage = 'Almost Keep trying! You can do it!';
       
       setTimeout(() => {
         this.showChallengeResult = false;

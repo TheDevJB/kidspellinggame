@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ThemeService } from './services/theme.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -9,14 +9,14 @@ import { ThemeService } from './services/theme.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-
 export class AppComponent implements OnInit {
   title = 'kids-spelling-game';
 
-  constructor(private themeService: ThemeService) {
-  }
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   ngOnInit(): void {
-    this.themeService.setTheme(this.themeService.getCurrentTheme());
+    if (isPlatformBrowser(this.platformId)) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
   }
 }

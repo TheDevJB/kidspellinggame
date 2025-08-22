@@ -8,35 +8,35 @@ html, body {
 }
 
 
-:root[data-theme="light"] {
+:root {
+  /* Default dark theme variables */
   --primary-gradient: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
-  --primary-light: #3a7bd5;
-  --primary-dark: #0052a3;
+  --primary-light: #22d3ee;
+  --primary-dark: #0ea5e9;
   --secondary-gradient: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
   --accent-color: #ffd166;
-  --bg-gradient: linear-gradient(135deg, #e6f7ff 0%, #f0fff4 100%);
-  --bg-glass: rgba(255, 255, 255, 0.75);
-  --bg-card: rgba(255, 255, 255, 0.9);
-  --text-primary: #1a202c;
-  --text-secondary: #2d3748;
-  --text-light: #4a5568;
+  --bg-gradient: radial-gradient(1200px 600px at 20% 10%, rgba(56, 189, 248, 0.15) 0%, rgba(0,0,0,0) 60%), radial-gradient(1000px 500px at 80% 20%, rgba(34, 197, 94, 0.12) 0%, rgba(0,0,0,0) 60%), linear-gradient(180deg, #0b1020 0%, #0a0f1a 40%, #0a0f1a 100%);
+  --bg-glass: rgba(255, 255, 255, 0.06);
+  --bg-card: rgba(255, 255, 255, 0.08);
+  --text-primary: #f8fafc;
+  --text-secondary: #e2e8f0;
+  --text-light: #a0aec0;
   --text-accent: #ff6b6b;
   --button-gradient: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
-  --button-hover: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+  --button-hover: linear-gradient(135deg, #22d3ee 0%, #00d2ff 100%);
   --success-color: #22c55e;
   --error-color: #ef4444;
-  --theme-toggle-bg: rgba(255, 255, 255, 0.95);
-  --theme-toggle-border: #e2e8f0;
-  --theme-toggle-text: #2d3748;
-  --theme-toggle-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --theme-toggle-hover-bg: #f7fafc;
-  --theme-toggle-hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  --nav-bg: rgba(255, 255, 255, 0.9);
-  --nav-text: #1a202c;
+  --theme-toggle-bg: rgba(255, 255, 255, 0.08);
+  --theme-toggle-border: rgba(255, 255, 255, 0.18);
+  --theme-toggle-text: #f8fafc;
+  --theme-toggle-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --theme-toggle-hover-bg: rgba(255, 255, 255, 0.12);
+  --theme-toggle-hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --nav-bg: rgba(255, 255, 255, 0.08);
+  --nav-text: #f8fafc;
   --nav-hover: #0ea5e9;
-  --nav-active: #06b6d4;
+  --nav-active: #22d3ee;
 }
-
 
 :root[data-theme="dark"] {
   --primary-gradient: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);

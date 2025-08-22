@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
-import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
 
 @Component({
   selector: 'app-nav-tabs',
